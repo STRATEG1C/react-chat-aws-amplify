@@ -1,19 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import history from '../../helpers/history';
+import { Auth } from 'aws-amplify';
+import History from '../../helpers/history';
 
 const initialState = {
   user: null,
   isLoading: false,
-  isError: false
+  isError: false,
+  isRegistered: false
 };
 
-export const login = createAsyncThunk('LOGIN', async ({ email, password }) => {
-  // here some query to login user
-  console.log(`Login user with ${email} and ${password}...`);
+export const register = createAsyncThunk('Register', async ({ email, username, password, repeatPassword }) => {
+  console.log(`Register user with ${email} and ${password}...`);
+  await Auth.signUp({
+    username: email,
+    password,
+    attributes: {
+      email
+    }
+  });
+});
 
-  const res = await axios.get('http://localhost:3000/currentUser');
-  return res.data;
+export const login = createAsyncThunk('LOGIN', async ({ email, password }) => {
+  const res = await Auth.signIn({
+    username: email,
+    password
+  });
+
+  const userSession = res.getSignInUserSession();
+
+  return {
+    ...res.attributes,
+    username: res.username,
+    idToken: userSession.getIdToken().getJwtToken(),
+    accessToken: userSession.getAccessToken().getJwtToken()
+  }
 });
 
 export const authSlice = createSlice({
@@ -38,11 +58,26 @@ export const authSlice = createSlice({
     [login.fulfilled]: (state, action) => {
       state.user = action.payload;
       state.isLoading = false;
-      history.push('/posts');
+      History.push('/posts');
     },
     [login.rejected]: (state, action) => {
       state.isError = true;
       state.isLoading = false;
+    },
+
+    [register.pending]: (state, action) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.isRegistered = false;
+    },
+    [register.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.isRegistered = true;
+    },
+    [register.rejected]: (state, action) => {
+      state.isError = true;
+      state.isLoading = false;
+      state.isRegistered = false;
     }
   }
 });

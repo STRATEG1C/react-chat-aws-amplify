@@ -1,0 +1,24 @@
+type Room
+@model
+@auth(rules: [
+  { allow: private, operations: [create, delete, read, update] }])
+{
+  id: ID!
+  authorCognitoId: String!
+  recipientCognitoId: String!
+  recipientLocalId: Int!
+  messages: [Message]
+  messagesReadDateTime: [ReadData]
+}
+
+type Message {
+  authorCognitoId: String!,
+  contentType: String!
+  content: String!
+  createdAt: AWSDateTime!
+}
+
+type ReadData {
+  readerCognitoId: String!
+  readDateTime: AWSDateTime!
+}

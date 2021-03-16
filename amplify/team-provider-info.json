@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chatamplifyguidework-dev-124235-authRole",
+      "UnauthRoleArn": "arn:aws:iam::080519498613:role/amplify-chatamplifyguidework-dev-124235-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::080519498613:role/amplify-chatamplifyguidework-dev-124235-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-chatamplifyguidework-dev-124235-deployment",
+      "UnauthRoleName": "amplify-chatamplifyguidework-dev-124235-unauthRole",
+      "StackName": "amplify-chatamplifyguidework-dev-124235",
+      "StackId": "arn:aws:cloudformation:eu-central-1:080519498613:stack/amplify-chatamplifyguidework-dev-124235/5300c6b0-8644-11eb-94e0-06dac082283e",
+      "AmplifyAppId": "dwns6hpp74pot"
+    },
+    "categories": {
+      "function": {
+        "chatamplifyguidework5e0df911CustomMessage": {
+          "REDIRECTURL": "",
+          "EMAILSUBJECT": "AmplifyChatGuideMailer",
+          "EMAILMESSAGE": "Hey, you should confirm your account!",
+          "deploymentBucketName": "amplify-chatamplifyguidework-dev-124235-deployment",
+          "s3Key": "amplify-builds/chatamplifyguidework5e0df911CustomMessage-7639524a655470383670-build.zip"
+        }
+      }
+    }
+  }
+}

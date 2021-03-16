@@ -23,7 +23,7 @@ class Login extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.user !== this.props.user) {
-      this.props.history.push('/posts');
+      // this.props.history.push('/');
     }
   }
 
@@ -36,19 +36,12 @@ class Login extends Component {
       },
       formErrors: {
         ...prevState.formErrors,
-        [field]: false
+        [field]: ''
       }
     }))
   }
 
   onLogin = () => {
-    const { loginForm, formErrors } = this.state;
-
-    !loginForm.email.trim() && (formErrors.email = 'Field cannot be empty');
-    !loginForm.password.trim() && (formErrors.password = 'Field cannot be empty');
-
-    // if (!loginForm.email.trim() || !loginForm.password.trim()) return;
-
     this.props.onLogin(this.state.loginForm);
   }
 
@@ -57,7 +50,7 @@ class Login extends Component {
     const { isError } = this.props;
 
     return (
-      <PageWrapper title="TItle">
+      <PageWrapper title="Login">
         <div className="login-form">
           <TextInput
             label="Email"
@@ -68,6 +61,7 @@ class Login extends Component {
           />
           <TextInput
             label="Password"
+            type="password"
             value={loginForm.password}
             onChange={this.onFormChange}
             name="password"
