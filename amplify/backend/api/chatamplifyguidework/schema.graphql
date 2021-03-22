@@ -1,0 +1,18 @@
+type ChatRoom @model {
+  id: String!
+  initiatorId: String!
+  subscriberId: String!
+  messages: [Message]
+}
+
+type Message @model {
+  id: String!
+  authorId: String!
+  text: String
+}
+
+type User @model {
+  id: String!
+  email: String!
+  username: String!
+}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { register } from '../../../store/Auth';
 import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
@@ -19,9 +20,11 @@ const initialFormErrors = {
   repeatPassword: ''
 }
 
-const Register = ({ onRegister }) => {
+const Register = ({ onRegister, isError }) => {
   const [form, setForm] = useState(initialForm);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
+
+  const history = useHistory();
 
   const onFormChange = (field, value) => {
     setFormErrors(prev => ({
@@ -40,13 +43,19 @@ const Register = ({ onRegister }) => {
     !form.username.trim() && (formErrors.username = 'Field cannot be empty');
     !form.password.trim() && (formErrors.password = 'Field cannot be empty');
     !form.repeatPassword.trim() && (formErrors.repeatPassword = 'Field cannot be empty');
+    (form.password.trim() !== form.repeatPassword.trim()) && (formErrors.repeatPassword = 'Passwords are different')
 
     if (
       !formErrors.email &&
       !formErrors.password &&
       !formErrors.repeatPassword
     ) {
-      onRegister(form);
+      onRegister(form)
+        .then(() => !isError && history.push('/login'));
+    } else {
+      setFormErrors(prev => ({
+        ...prev
+      }));
     }
   }
 
@@ -93,10 +102,11 @@ const Register = ({ onRegister }) => {
 }
 
 const mapStateToProps = (state) => ({
+  isError: state.auth.isError
 });
 
 const mapDispatchToProps = {
-  onRegister: register
+  onRegister: register,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

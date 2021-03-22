@@ -1,6 +1,6 @@
 {
   "api": {
-    "ChatApi": {
+    "chatamplifyguidework": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -8,7 +8,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authchatamplifyguidework5e0df911"
+              "userPoolId": "authchatamplifyguidework174801f5"
             }
           },
           "additionalAuthenticationProviders": []

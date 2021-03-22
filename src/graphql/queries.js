@@ -1,50 +1,100 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getRoom = /* GraphQL */ `
-  query GetRoom($id: ID!) {
-    getRoom(id: $id) {
+export const getChatRoom = /* GraphQL */ `
+  query GetChatRoom($id: ID!) {
+    getChatRoom(id: $id) {
       id
-      authorCognitoId
-      recipientCognitoId
-      recipientLocalId
+      initiatorId
+      subscriberId
       messages {
-        authorCognitoId
-        contentType
-        content
+        id
+        authorId
+        text
         createdAt
-      }
-      messagesReadDateTime {
-        readerCognitoId
-        readDateTime
+        updatedAt
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const listRooms = /* GraphQL */ `
-  query ListRooms(
-    $filter: ModelRoomFilterInput
+export const listChatRooms = /* GraphQL */ `
+  query ListChatRooms(
+    $filter: ModelChatRoomFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listChatRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        authorCognitoId
-        recipientCognitoId
-        recipientLocalId
+        initiatorId
+        subscriberId
         messages {
-          authorCognitoId
-          contentType
-          content
+          id
+          authorId
+          text
           createdAt
+          updatedAt
         }
-        messagesReadDateTime {
-          readerCognitoId
-          readDateTime
-        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
+      id
+      authorId
+      text
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        authorId
+        text
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      email
+      username
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUsers = /* GraphQL */ `
+  query ListUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        username
         createdAt
         updatedAt
       }

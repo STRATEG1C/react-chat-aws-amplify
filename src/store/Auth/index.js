@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Auth } from 'aws-amplify';
-import History from '../../helpers/history';
+import { Auth, graphqlOperation, API } from 'aws-amplify';
+import { getUser } from '../../graphql/queries';
+import { createUser } from '../../graphql/mutations';
 
 const initialState = {
   user: null,
+  isLoggedIn: false,
   isLoading: false,
   isError: false,
   isRegistered: false
@@ -26,14 +28,27 @@ export const login = createAsyncThunk('LOGIN', async ({ email, password }) => {
     password
   });
 
-  const userSession = res.getSignInUserSession();
+  const { sub, username } = res.attributes;
+  const userQueryRes = API.graphql(graphqlOperation(getUser, { id: sub }))
+  let user = userQueryRes.data.getUser;
 
-  return {
-    ...res.attributes,
-    username: res.username,
-    idToken: userSession.getIdToken().getJwtToken(),
-    accessToken: userSession.getAccessToken().getJwtToken()
+  if (!user) {
+    const userData = {
+      id: sub,
+      email,
+      username
+    };
+    const createUserRes = API.graphql(graphqlOperation(createUser, { input: userData }))
+    user = createUserRes.data.createUser;
   }
+
+  console.log(user);
+
+  return user;
+});
+
+export const signOut = createAsyncThunk('SIGN_OUT', async () => {
+  return await Auth.signOut();
 });
 
 export const authSlice = createSlice({
@@ -53,16 +68,18 @@ export const authSlice = createSlice({
   extraReducers: {
     [login.pending]: (state, action) => {
       state.isLoading = true;
+      state.isLoggedIn = false;
       state.isError = false;
     },
     [login.fulfilled]: (state, action) => {
       state.user = action.payload;
+      state.isLoggedIn = true;
       state.isLoading = false;
-      History.push('/posts');
     },
     [login.rejected]: (state, action) => {
       state.isError = true;
       state.isLoading = false;
+      state.isLoggedIn = false;
     },
 
     [register.pending]: (state, action) => {
@@ -72,17 +89,24 @@ export const authSlice = createSlice({
     },
     [register.fulfilled]: (state, action) => {
       state.isLoading = false;
+      state.isError = false;
       state.isRegistered = true;
     },
     [register.rejected]: (state, action) => {
       state.isError = true;
       state.isLoading = false;
       state.isRegistered = false;
-    }
+    },
+
+    [signOut.pending]: (state, action) => {
+      state.isLoading = true;
+      state.isLoggedIn = false;
+      state.isError = false;
+    },
   }
 });
 
-export const { setUser, clearUser, toggleLoading } = authSlice.actions;
+export const { setUser, clearUser } = authSlice.actions;
 
 export const selectCurrentUser = state => state.user;
 

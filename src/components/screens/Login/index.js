@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { login } from '../../../store/Auth';
+import { login, signOut } from '../../../store/Auth';
 import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
 import Button from '../../common/Button';
@@ -21,9 +21,15 @@ class Login extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.isLoggedIn) {
+      this.props.signOut();
+    }
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.user !== this.props.user) {
-      // this.props.history.push('/');
+    if (this.props.isLoggedIn) {
+      this.props.history.push('/');
     }
   }
 
@@ -80,11 +86,12 @@ class Login extends Component {
 
 const mapStateToProps = (state) => ({
   isError: state.auth.isError,
-  user: state.auth.user,
+  isLoggedIn: state.auth.isLoggedIn,
 });
 
 const mapDispatchToProps = {
-  onLogin: login
+  onLogin: login,
+  signOut
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -10,8 +10,8 @@ const Routing = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/login" component={Login } />
-        <Route exact path="/register" component={Register } />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
         <AuthenticatedRoute exact path="/" component={ChatList} />
         <AuthenticatedRoute exact path="/posts" component={PostsPage} />
       </Switch>
