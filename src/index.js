@@ -8,19 +8,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 
-const config = {
-  ...awsmobile,
-  Auth: {
-    "region": "eu-central-1",
-    "identityPoolRegion": "eu-central-1",
-    "userPoolId": "eu-central-1_oPKyFJh5h",
-    "userPoolWebClientId": "72au1vjhtq49mcelb47j09s1l",
-    "mandatorySignIn": false,
-    "authenticationFlowType": "USER_PASSWORD_AUTH"
-  }
-}
-
-Amplify.configure(config);
+Amplify.configure(awsmobile);
 
 ReactDOM.render(
   <React.StrictMode>

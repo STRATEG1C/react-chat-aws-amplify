@@ -1,6 +1,14 @@
 {
+  "auth": {
+    "reactchatawsamplify6985e8ca": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
   "api": {
-    "chatamplifyguidework": {
+    "chatApi": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -8,20 +16,12 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authchatamplifyguidework174801f5"
+              "userPoolId": "authreactchatawsamplify6985e8ca"
             }
           },
           "additionalAuthenticationProviders": []
         }
       }
     }
-  },
-  "function": {
-    "chatamplifyguidework5e0df911CustomMessage": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
-  "auth": {}
+  }
 }

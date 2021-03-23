@@ -2,12 +2,13 @@ type ChatRoom @model {
   id: String!
   initiatorId: String!
   subscriberId: String!
-  messages: [Message]
+  lastMessage: String
 }
 
 type Message @model {
   id: String!
   authorId: String!
+  roomId: String!
   text: String
 }
 

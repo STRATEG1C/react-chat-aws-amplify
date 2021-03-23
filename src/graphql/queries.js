@@ -7,13 +7,7 @@ export const getChatRoom = /* GraphQL */ `
       id
       initiatorId
       subscriberId
-      messages {
-        id
-        authorId
-        text
-        createdAt
-        updatedAt
-      }
+      lastMessage
       createdAt
       updatedAt
     }
@@ -30,13 +24,7 @@ export const listChatRooms = /* GraphQL */ `
         id
         initiatorId
         subscriberId
-        messages {
-          id
-          authorId
-          text
-          createdAt
-          updatedAt
-        }
+        lastMessage
         createdAt
         updatedAt
       }
@@ -49,6 +37,7 @@ export const getMessage = /* GraphQL */ `
     getMessage(id: $id) {
       id
       authorId
+      roomId
       text
       createdAt
       updatedAt
@@ -65,6 +54,7 @@ export const listMessages = /* GraphQL */ `
       items {
         id
         authorId
+        roomId
         text
         createdAt
         updatedAt

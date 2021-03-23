@@ -10,13 +10,7 @@ export const createChatRoom = /* GraphQL */ `
       id
       initiatorId
       subscriberId
-      messages {
-        id
-        authorId
-        text
-        createdAt
-        updatedAt
-      }
+      lastMessage
       createdAt
       updatedAt
     }
@@ -31,13 +25,7 @@ export const updateChatRoom = /* GraphQL */ `
       id
       initiatorId
       subscriberId
-      messages {
-        id
-        authorId
-        text
-        createdAt
-        updatedAt
-      }
+      lastMessage
       createdAt
       updatedAt
     }
@@ -52,13 +40,7 @@ export const deleteChatRoom = /* GraphQL */ `
       id
       initiatorId
       subscriberId
-      messages {
-        id
-        authorId
-        text
-        createdAt
-        updatedAt
-      }
+      lastMessage
       createdAt
       updatedAt
     }
@@ -72,6 +54,7 @@ export const createMessage = /* GraphQL */ `
     createMessage(input: $input, condition: $condition) {
       id
       authorId
+      roomId
       text
       createdAt
       updatedAt
@@ -86,6 +69,7 @@ export const updateMessage = /* GraphQL */ `
     updateMessage(input: $input, condition: $condition) {
       id
       authorId
+      roomId
       text
       createdAt
       updatedAt
@@ -100,6 +84,7 @@ export const deleteMessage = /* GraphQL */ `
     deleteMessage(input: $input, condition: $condition) {
       id
       authorId
+      roomId
       text
       createdAt
       updatedAt

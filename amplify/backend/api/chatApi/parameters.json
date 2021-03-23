@@ -1,10 +1,10 @@
 {
-  "AppSyncApiName": "chatamplifyguidework",
+  "AppSyncApiName": "chatApi",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authchatamplifyguidework174801f5",
+      "authreactchatawsamplify6985e8ca",
       "Outputs.UserPoolId"
     ]
   }

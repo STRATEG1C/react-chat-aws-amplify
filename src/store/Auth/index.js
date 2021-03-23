@@ -17,34 +17,37 @@ export const register = createAsyncThunk('Register', async ({ email, username, p
     username: email,
     password,
     attributes: {
-      email
+      email,
+      nickname: username
     }
   });
 });
 
 export const login = createAsyncThunk('LOGIN', async ({ email, password }) => {
-  const res = await Auth.signIn({
-    username: email,
-    password
-  });
+  try {
+    const res = await Auth.signIn({
+      username: email,
+      password
+    });
 
-  const { sub, username } = res.attributes;
-  const userQueryRes = API.graphql(graphqlOperation(getUser, { id: sub }))
-  let user = userQueryRes.data.getUser;
+    const {sub, nickname} = res.attributes;
+    const userQueryRes = await API.graphql(graphqlOperation(getUser, {id: sub}))
+    let user = userQueryRes.data.getUser;
 
-  if (!user) {
-    const userData = {
-      id: sub,
-      email,
-      username
-    };
-    const createUserRes = API.graphql(graphqlOperation(createUser, { input: userData }))
-    user = createUserRes.data.createUser;
+    if (!user) {
+      const userData = {
+        id: sub,
+        email: email,
+        username: nickname
+      };
+      const createUserRes = await API.graphql(graphqlOperation(createUser, {input: userData}))
+      user = createUserRes.data.createUser;
+    }
+
+    return user;
+  } catch (error) {
+    console.log(error);
   }
-
-  console.log(user);
-
-  return user;
 });
 
 export const signOut = createAsyncThunk('SIGN_OUT', async () => {
