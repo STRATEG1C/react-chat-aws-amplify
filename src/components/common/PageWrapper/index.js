@@ -1,18 +1,20 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import './style.css';
 
-class PageWrapper extends Component {
-  componentDidMount() {
-    document.title = this.props.title;
-  }
+const PageWrapper = ({ title, children }) => {
+  useEffect(() => {
+    document.title = title;
+  }, []);
 
-  render() {
-    return (
-      <div className="page-wrapper">
-        {this.props.children}
+  return (
+    <div className="page-wrapper">
+      <div className="page-wrapper__header">
+        <h1>{title}</h1>
       </div>
-    )
-  }
+      {children}
+    </div>
+  )
 }
 
 PageWrapper.propTypes = {

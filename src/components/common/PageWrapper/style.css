@@ -1,0 +1,9 @@
+.page-wrapper {
+    padding: 0 20px;
+}
+
+.page-wrapper .page-wrapper__header {
+    padding: 20px 0 ;
+    border-bottom: 1px solid gray;
+    margin-bottom: 20px;
+}
