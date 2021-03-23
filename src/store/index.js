@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './Auth';
 import postReducer from './Post';
+import userReducer from './User';
 
 const getSavedState = () => {
   return JSON.parse(localStorage.getItem('state')) || {};
@@ -10,7 +11,8 @@ const store = configureStore({
   preloadedState: getSavedState(),
   reducer: {
     auth: authReducer,
-    post: postReducer
+    post: postReducer,
+    user: userReducer
   }
 });
 
