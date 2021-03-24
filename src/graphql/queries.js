@@ -6,7 +6,9 @@ export const getChatRoom = /* GraphQL */ `
     getChatRoom(id: $id) {
       id
       initiatorId
+      initiatorUsername
       subscriberId
+      subscriberUsername
       lastMessage
       createdAt
       updatedAt
@@ -23,7 +25,9 @@ export const listChatRooms = /* GraphQL */ `
       items {
         id
         initiatorId
+        initiatorUsername
         subscriberId
+        subscriberUsername
         lastMessage
         createdAt
         updatedAt

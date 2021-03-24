@@ -1,7 +1,9 @@
 type ChatRoom @model {
   id: String!
   initiatorId: String!
+  initiatorUsername: String!
   subscriberId: String!
+  subscriberUsername: String!
   lastMessage: String
 }
 
@@ -9,7 +11,7 @@ type Message @model {
   id: String!
   authorId: String!
   roomId: String!
-  text: String
+  text: String!
 }
 
 type User @model {

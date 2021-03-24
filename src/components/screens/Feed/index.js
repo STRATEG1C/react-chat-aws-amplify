@@ -10,6 +10,7 @@ import PageWrapper from '../../common/PageWrapper';
 import UsersList from '../UsersList';
 
 import './style.css';
+import ChatList from '../ChatList';
 
 const Feed = () => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
@@ -20,8 +21,18 @@ const Feed = () => {
 
     const filter = {
       or: [
-        { initiatorId: { eq: userId } },
-        { subscriberId: { eq: userId } },
+        {
+          and: [
+            { initiatorId: { eq: userId } },
+            { subscriberId: { eq: currentUser.id } }
+          ]
+        },
+        {
+          and: [
+            { initiatorId: { eq: currentUser.id } },
+            { subscriberId: { eq: userId } }
+          ]
+        }
       ]
     }
     const getChatRes = await API.graphql(graphqlOperation(listChatRooms, { filter, limit: 1 }));
@@ -42,11 +53,18 @@ const Feed = () => {
     history.push(`/chat/${room.id}`);
   };
 
+  const onChatClick = (chatId) => {
+    history.push(`/chat/${chatId}`);
+  }
+
   return (
     <PageWrapper title="Feed">
       <UsersList onUserClick={onUserClick} currentUser={currentUser.id} />
+      <br />
+      <br />
+      <ChatList onChatClick={onChatClick} />
     </PageWrapper>
-  )
+  );
 }
 
 export default Feed;
