@@ -6,7 +6,9 @@ export const onCreateChatRoom = /* GraphQL */ `
     onCreateChatRoom {
       id
       initiatorId
+      initiatorUsername
       subscriberId
+      subscriberUsername
       lastMessage
       createdAt
       updatedAt
@@ -18,7 +20,9 @@ export const onUpdateChatRoom = /* GraphQL */ `
     onUpdateChatRoom {
       id
       initiatorId
+      initiatorUsername
       subscriberId
+      subscriberUsername
       lastMessage
       createdAt
       updatedAt
@@ -30,7 +34,9 @@ export const onDeleteChatRoom = /* GraphQL */ `
     onDeleteChatRoom {
       id
       initiatorId
+      initiatorUsername
       subscriberId
+      subscriberUsername
       lastMessage
       createdAt
       updatedAt

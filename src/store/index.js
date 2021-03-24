@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './Auth';
 import postReducer from './Post';
 import userReducer from './User';
+import chatReducer from './Chat';
 
 const getSavedState = () => {
   return JSON.parse(localStorage.getItem('state')) || {};
@@ -12,7 +13,8 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     post: postReducer,
-    user: userReducer
+    user: userReducer,
+    chat: chatReducer
   }
 });
 
