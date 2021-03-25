@@ -10,6 +10,11 @@ export const onCreateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }
@@ -24,6 +29,11 @@ export const onUpdateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }
@@ -38,42 +48,11 @@ export const onDeleteChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateMessage = /* GraphQL */ `
-  subscription OnCreateMessage {
-    onCreateMessage {
-      id
-      authorId
-      roomId
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMessage = /* GraphQL */ `
-  subscription OnUpdateMessage {
-    onUpdateMessage {
-      id
-      authorId
-      roomId
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMessage = /* GraphQL */ `
-  subscription OnDeleteMessage {
-    onDeleteMessage {
-      id
-      authorId
-      roomId
-      text
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }

@@ -13,6 +13,11 @@ export const createChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }
@@ -30,6 +35,11 @@ export const updateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }
@@ -47,51 +57,11 @@ export const deleteChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createMessage = /* GraphQL */ `
-  mutation CreateMessage(
-    $input: CreateMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    createMessage(input: $input, condition: $condition) {
-      id
-      authorId
-      roomId
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateMessage = /* GraphQL */ `
-  mutation UpdateMessage(
-    $input: UpdateMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    updateMessage(input: $input, condition: $condition) {
-      id
-      authorId
-      roomId
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteMessage = /* GraphQL */ `
-  mutation DeleteMessage(
-    $input: DeleteMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    deleteMessage(input: $input, condition: $condition) {
-      id
-      authorId
-      roomId
-      text
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }

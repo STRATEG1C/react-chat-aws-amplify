@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, selectAllUsers } from '../../../store/User';
 
 const UsersList = ({ onUserClick, currentUser }) => {
-  const userList = useSelector(state => selectAllUsers(state.user));
+  const userList = useSelector(state => selectAllUsers(state.user)).filter(user => user.id !== currentUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="users-list">

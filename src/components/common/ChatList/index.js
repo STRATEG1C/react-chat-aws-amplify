@@ -10,7 +10,7 @@ const ChatList = ({ onChatClick }) => {
 
   useEffect(() => {
     dispatch(fetchChats(currentUser.id));
-  }, []);
+  }, [currentUser.id, dispatch]);
 
   return (
     <div className="users-list">
@@ -19,9 +19,9 @@ const ChatList = ({ onChatClick }) => {
         {chatList.map(item => (
           <div className="user-card" key={item.id} onClick={() => onChatClick(item.id)}>
             <p className="user-card__nickname">{
-              currentUser.id === item.initiator.id
-                ? item.subscriber.username
-                : item.initiator.username
+              currentUser.id === item.initiatorId
+                ? item.subscriberUsername
+                : item.initiatorUsername
             }</p>
           </div>
         ))}

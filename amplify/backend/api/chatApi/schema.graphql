@@ -4,13 +4,13 @@ type ChatRoom @model {
   initiatorUsername: String!
   subscriberId: String!
   subscriberUsername: String!
-  lastMessage: String
+  lastMessage: String,
+  messages: [Message]
 }
 
-type Message @model {
+type Message {
   id: String!
   authorId: String!
-  roomId: String!
   text: String!
 }
 

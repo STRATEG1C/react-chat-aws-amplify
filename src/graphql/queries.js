@@ -10,6 +10,11 @@ export const getChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        id
+        authorId
+        text
+      }
       createdAt
       updatedAt
     }
@@ -29,37 +34,11 @@ export const listChatRooms = /* GraphQL */ `
         subscriberId
         subscriberUsername
         lastMessage
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getMessage = /* GraphQL */ `
-  query GetMessage($id: ID!) {
-    getMessage(id: $id) {
-      id
-      authorId
-      roomId
-      text
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listMessages = /* GraphQL */ `
-  query ListMessages(
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        authorId
-        roomId
-        text
+        messages {
+          id
+          authorId
+          text
+        }
         createdAt
         updatedAt
       }
