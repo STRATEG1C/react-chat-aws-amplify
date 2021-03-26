@@ -1,21 +1,26 @@
 type ChatRoom @model {
-  id: String!
+  id: ID!
   initiatorId: String!
   initiatorUsername: String!
   subscriberId: String!
   subscriberUsername: String!
-  lastMessage: String,
-  messages: [Message]
+  lastMessage: String
 }
 
-type Message {
-  id: String!
+type Message
+@model
+@key(name: "byChatId", fields: ["chatId", "createdAt"], queryField: "messagesByChatId")
+{
+  id: ID!
+  chatId: ID!
   authorId: String!
-  text: String!
+  body: String!
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
 
 type User @model {
-  id: String!
+  id: ID!
   email: String!
   username: String!
 }

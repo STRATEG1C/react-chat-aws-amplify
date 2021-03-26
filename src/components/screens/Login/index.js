@@ -4,6 +4,7 @@ import { login, signOut } from '../../../store/Auth';
 import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
 import Button from '../../common/Button';
+import { Link } from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -77,6 +78,7 @@ class Login extends Component {
            onClick={this.onLogin}
            text="Log in"
           />
+          <Link to="/register">Register</Link>
           {isError && <p className="error">Invalid credentials</p>}
         </div>
       </PageWrapper>

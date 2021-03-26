@@ -50,8 +50,7 @@ const Feed = () => {
           initiatorUsername: currentUser.username,
           subscriberId: subscriberUser.id,
           subscriberUsername: subscriberUser.username,
-          lastMessage: '',
-          messages: []
+          lastMessage: ''
         }
 
         const createRoomRes = await API.graphql(graphqlOperation(createChatRoom, { input: newChatRoomData }));

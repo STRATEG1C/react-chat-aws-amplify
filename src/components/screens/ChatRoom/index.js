@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchChatRoom, selectCurrentChatRoom, setRoomData } from '../../../store/Chat';
 import PageWrapper from '../../common/PageWrapper';
-import { selectCurrentUser, setUser } from '../../../store/Auth';
+import { selectCurrentUser } from '../../../store/Auth';
 import ChatMessage from './ChatMessage';
 import AddMessageBlock from './AddMessageForm';
 import { API, graphqlOperation } from 'aws-amplify';
 import { v4 as uuid } from 'uuid';
-import { updateChatRoom } from '../../../graphql/mutations';
-import { onUpdateChatRoom } from '../../../graphql/subscriptions';
+import { createMessage } from '../../../graphql/mutations';
+import { onCreateMessage } from '../../../graphql/subscriptions';
 import { Link } from 'react-router-dom';
 
 const ChatRoom = ({ match }) => {
@@ -22,47 +22,44 @@ const ChatRoom = ({ match }) => {
   useEffect(() => {
     const { chatId } = match.params;
     dispatch(fetchChatRoom(chatId));
+  }, []);
 
+  useEffect(() => {
     subscription = API.graphql(
       {
-        query: onUpdateChatRoom
+        query: onCreateMessage
       }
     ).subscribe({
       next(value) {
-        const updatedRoom = value.value.data.onUpdateChatRoom;
-        dispatch(setRoomData(updatedRoom));
+        const newMessage = value.value.data.onCreateMessage;
+        if (newMessage.chatId === chatRoomData.id) {
+          dispatch(setRoomData({
+            ...chatRoomData,
+            messages: [
+              newMessage,
+              ...chatRoomData.messages
+            ]
+          }));
+        }
       }
     });
 
     return () => {
       subscription.unsubscribe();
     }
-  }, []);
+  }, [chatRoomData]);
 
   const onAddMessage = async (message) => {
     const { chatId } = match.params;
 
-    const { messages, createdAt, updatedAt, ...rest } = chatRoomData;
-
     const newMessage = {
       id: uuid(),
+      chatId: chatId,
       authorId: currentUser.id,
-      text: message
+      body: message
     };
 
-    const newMessages = [
-      newMessage,
-      ...chatRoomData.messages,
-    ];
-
-    const updatedData = {
-      ...rest,
-      messages: newMessages
-    }
-
-    console.log(updatedData);
-
-    await API.graphql(graphqlOperation(updateChatRoom, {input: updatedData}));
+    await API.graphql(graphqlOperation(createMessage, { input: newMessage }));
   }
 
   if (isLoading || !chatRoomData) {

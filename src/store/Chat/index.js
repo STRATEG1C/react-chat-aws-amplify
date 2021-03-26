@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { graphqlOperation, API } from 'aws-amplify';
-import { getChatRoom, listChatRooms } from '../../graphql/queries';
+import { getChatRoom, listChatRooms, messagesByChatId } from '../../graphql/queries';
 
 const initialState = {
   items: [],
@@ -24,26 +24,10 @@ export const fetchChatRoom = createAsyncThunk('FETCH_CHAT_ROOM', async (chatId) 
   const chatRoomRes = await API.graphql(graphqlOperation(getChatRoom, { id: chatId }));
   const chatRoom = chatRoomRes.data.getChatRoom;
 
-  console.log(chatRoom);
+  const chatMessagesRes = await API.graphql(graphqlOperation(messagesByChatId, { chatId, sortDirection: 'DESC' }));
+  const messages = chatMessagesRes.data.messagesByChatId.items;
 
-  return chatRoom;
-
-  // if (chatRoom) {
-  //   const chatRoomMessagesFilter = {
-  //     roomId: { eq: chatRoom.id }
-  //   };
-  //   const chatRoomMessagesRes = await API.graphql(graphqlOperation(messagesByDate, {
-  //     createdAt: new Date().toDateString(),
-  //     sortDirection: 'DESC',
-  //     filter: chatRoomMessagesFilter
-  //   }))
-  //   const chatRoomMessages = chatRoomMessagesRes.data.listMessages.items;
-  //
-  //   return {
-  //     ...chatRoom,
-  //     messages: chatRoomMessages
-  //   };
-  // }
+  return { ...chatRoom, messages };
 });
 
 export const chatSlice = createSlice({
@@ -51,6 +35,7 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     setRoomData: (state, action) => {
+      console.log(action);
       state.chatRoom = action.payload;
     },
   },

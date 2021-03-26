@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { register } from '../../../store/Auth';
 import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
@@ -96,6 +96,7 @@ const Register = ({ onRegister, isError }) => {
           onClick={onSubmit}
           text="Register"
         />
+        <Link to="/login">Login</Link>
       </div>
     </PageWrapper>
   )
