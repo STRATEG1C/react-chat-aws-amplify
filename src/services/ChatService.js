@@ -5,20 +5,24 @@ class ChatService {
     this._provider = provider;
   }
 
-  async create(initiator, recipient) {
-    return this._provider.create(initiator, recipient);
+  async create(data) {
+    return this._provider.create(data);
   }
 
   async getById(id) {
     return this._provider.getById(id);
   }
 
-  async getMessagesByChatId(chatId) {
-    return this._provider.getMessagesByChatId(chatId);
+  async getMessagesByChatId(chatId, limit) {
+    return this._provider.getMessagesByChatId(chatId, limit);
   }
 
   async getList(by, limit) {
     return this._provider.getList(by, limit);
+  }
+
+  async createChatMessage(message) {
+    return this._provider.createChatMessage(message);
   }
 }
 

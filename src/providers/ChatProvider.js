@@ -1,21 +1,20 @@
 import { API, graphqlOperation } from 'aws-amplify';
-import { listChatRooms, messagesByChatId } from '../graphql/queries';
+import { getChatRoom, listChatRooms, messagesByChatId } from '../graphql/queries';
+import { createChatRoom, createMessage } from '../graphql/mutations';
 
 class ChatProvider {
-  constructor(provider) {
-    this._provider = provider;
-  }
-
-  async create(initiator, recipient) {
-    return this._provider.create(initiator, recipient);
+  async create(data) {
+    const res = await API.graphql(graphqlOperation(createChatRoom, { input: data }));
+    return res.data.createChatRoom;
   }
 
   async getById(id) {
-    return this._provider.getById(id);
+    const res = await API.graphql(graphqlOperation(getChatRoom, { id }));
+    return res.data.getChatRoom;
   }
 
-  async getMessagesByChatId(chatId) {
-    const res = API.graphql(graphqlOperation(messagesByChatId, { chatId, sortDirection: 'DESC' }));
+  async getMessagesByChatId(chatId, limit) {
+    const res = await API.graphql(graphqlOperation(messagesByChatId, { chatId, sortDirection: 'DESC', limit }));
     const { items, nextToken } = res.data.messagesByChatId;
     return {
       items,
@@ -30,6 +29,11 @@ class ChatProvider {
       items,
       next: nextToken
     };
+  }
+
+  async createChatMessage(message) {
+    const res = await API.graphql(graphqlOperation(createMessage, { input: message }));
+    return res.data.createMessage;
   }
 }
 

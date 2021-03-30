@@ -10,10 +10,7 @@ class CognitoAuthProvider {
   }
 
   async login(username, password) {
-    return await Auth.signIn({
-      username,
-      password
-    });
+    return await Auth.signIn(username, password);
   }
 
   async logout() {

@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuid } from 'uuid';
+import { Link } from 'react-router-dom';
+import { API, graphqlOperation } from 'aws-amplify';
 import { selectCurrentChatRoom, setRoomData } from '../../../store/Chat';
 import { fetchChatRoom } from '../../../store/Chat/thunks';
-import PageWrapper from '../../common/PageWrapper';
 import { selectCurrentUser } from '../../../store/Auth';
-import ChatMessage from './ChatMessage';
-import AddMessageBlock from './AddMessageForm';
-import { API, graphqlOperation } from 'aws-amplify';
-import { v4 as uuid } from 'uuid';
 import { createMessage } from '../../../graphql/mutations';
 import { onCreateMessage } from '../../../graphql/subscriptions';
-import { Link } from 'react-router-dom';
+import PageWrapper from '../../common/PageWrapper';
+import ChatMessage from './ChatMessage';
+import AddMessageBlock from './AddMessageForm';
 
 const ChatRoom = ({ match }) => {
   const dispatch = useDispatch();
@@ -72,8 +72,13 @@ const ChatRoom = ({ match }) => {
   const { messages } = chatRoomData;
 
   return (
-    <PageWrapper title={`Chat with ${chatRoomData.subscriberUsername}`}>
+    <PageWrapper title={`Chat with ${
+      chatRoomData.initiatorId === currentUser.id
+        ? chatRoomData.subscriberUsername
+        : chatRoomData.initiatorUsername
+    }`}>
       <Link to="/">To feed</Link>
+      <AddMessageBlock onAdd={onAddMessage} />
       <div className="chat-room">
         {messages.map(message => (
           <ChatMessage
@@ -84,7 +89,6 @@ const ChatRoom = ({ match }) => {
         ))}
       </div>
       <hr/>
-      <AddMessageBlock onAdd={onAddMessage} />
     </PageWrapper>
   );
 };

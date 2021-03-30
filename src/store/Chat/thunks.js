@@ -11,12 +11,11 @@ export const fetchChats = createAsyncThunk('FETCH_CHATS', async (userId) => {
       { subscriberId: { eq: userId } },
     ]
   }
-  const { items, next } = chatService.getList(filter);
-  return items;
+  return await chatService.getList(filter);
 });
 
 export const fetchChatRoom = createAsyncThunk('FETCH_CHAT_ROOM', async (chatId) => {
-  const chatRoom = chatService.getById(chatId);
-  const messages = chatService.getMessagesByChatId(chatId);
+  const chatRoom = await chatService.getById(chatId);
+  const { items: messages } = await chatService.getMessagesByChatId(chatId);
   return { ...chatRoom, messages };
 });
