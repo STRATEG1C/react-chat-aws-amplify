@@ -1,54 +1,51 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
-import { API, graphqlOperation } from 'aws-amplify';
 import { selectCurrentChatRoom, setRoomData } from '../../../store/Chat';
 import { fetchChatRoom } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
-import { createMessage } from '../../../graphql/mutations';
-import { onCreateMessage } from '../../../graphql/subscriptions';
+import ChatService from '../../../services/ChatService';
+import ChatProvider from '../../../providers/ChatProvider';
 import PageWrapper from '../../common/PageWrapper';
 import ChatMessage from './ChatMessage';
 import AddMessageBlock from './AddMessageForm';
 
+const chatService = new ChatService(new ChatProvider());
+
 const ChatRoom = ({ match }) => {
+  const [subscription, setSubscription] = useState(null);
+
   const dispatch = useDispatch();
   const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
   const isLoading = useSelector(state => state.chat.isLoading);
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  let subscription;
-
   useEffect(() => {
     const { chatId } = match.params;
     dispatch(fetchChatRoom(chatId));
-  }, []);
+  }, [dispatch, match.params]);
 
   useEffect(() => {
-    subscription = API.graphql(
-      {
-        query: onCreateMessage
-      }
-    ).subscribe({
-      next(value) {
-        const newMessage = value.value.data.onCreateMessage;
-        if (newMessage.chatId === chatRoomData.id) {
-          dispatch(setRoomData({
-            ...chatRoomData,
-            messages: [
-              newMessage,
-              ...chatRoomData.messages
-            ]
-          }));
-        }
-      }
-    });
+    if (!chatRoomData) {
+      return;
+    }
+
+    setSubscription(chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
+      dispatch(setRoomData({
+        ...chatRoomData,
+        messages: [
+          newMessage,
+          ...chatRoomData.messages
+        ]
+      }));
+    }));
 
     return () => {
       subscription.unsubscribe();
+      setSubscription(null);
     }
-  }, [chatRoomData]);
+  }, [chatRoomData, dispatch, subscription]);
 
   const onAddMessage = async (message) => {
     const { chatId } = match.params;
@@ -60,7 +57,7 @@ const ChatRoom = ({ match }) => {
       body: message
     };
 
-    await API.graphql(graphqlOperation(createMessage, { input: newMessage }));
+    await chatService.createChatMessage(newMessage);
   }
 
   if (isLoading || !chatRoomData) {

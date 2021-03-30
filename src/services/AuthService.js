@@ -6,7 +6,7 @@ class AuthService {
   }
 
   async register(username, password, attributes = {}) {
-    return this._provider.register(username, password, attributes = {});
+    return this._provider.register(username, password, attributes);
   }
 
   async login(username, password) {

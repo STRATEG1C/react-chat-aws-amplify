@@ -8,13 +8,9 @@ const authService = new AuthService(new CognitoAuthProvider());
 const userService = new UserService(new UserProvider());
 
 export const register = createAsyncThunk('Register', async ({ email, username, password, repeatPassword }) => {
-  await authService.register({
-    username: email,
-    password,
-    attributes: {
-      email,
-      nickname: username
-    }
+  await authService.register(email, password, {
+    email,
+    nickname: username
   });
 });
 

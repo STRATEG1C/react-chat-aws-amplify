@@ -13,7 +13,6 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     setRoomData: (state, action) => {
-      console.log(action);
       state.chatRoom = action.payload;
     },
   },

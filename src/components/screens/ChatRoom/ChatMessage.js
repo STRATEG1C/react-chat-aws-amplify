@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ChatMessage = ({ message, isOwn }) => {
-  const { id, authorId, roomId, body } = message;
+  const { body } = message;
 
   return (
     <div className={`chat-message ${isOwn ? 'own' : ''}`}>

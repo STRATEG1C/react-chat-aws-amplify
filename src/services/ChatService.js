@@ -24,6 +24,10 @@ class ChatService {
   async createChatMessage(message) {
     return this._provider.createChatMessage(message);
   }
+
+  subscribeToRoom(id, callback) {
+    return this._provider.subscribeToRoom(id, callback);
+  }
 }
 
 export default ChatService;
