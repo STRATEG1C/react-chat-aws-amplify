@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers, selectAllUsers } from '../../../store/User';
+import { selectAllUsers } from '../../../store/User';
+import { fetchUsers } from '../../../store/User/thunks';
 
 const UsersList = ({ onUserClick, currentUser }) => {
   const userList = useSelector(state => selectAllUsers(state.user)).filter(user => user.id !== currentUser);

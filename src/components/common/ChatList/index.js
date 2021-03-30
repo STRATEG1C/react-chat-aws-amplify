@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchChats, selectAllChats } from '../../../store/Chat';
+import { selectAllChats } from '../../../store/Chat';
+import { fetchChats } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 
 const ChatList = ({ onChatClick }) => {

@@ -1,17 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { graphqlOperation, API } from 'aws-amplify';
-import { listUsers } from '../../graphql/queries';
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchUsers } from './thunks';
 
 const initialState = {
   items: [],
   isLoading: false,
   isError: true
 };
-
-export const fetchUsers = createAsyncThunk('FETCH_USERS', async () => {
-  const listUserRes = await API.graphql(graphqlOperation(listUsers));
-  return listUserRes.data.listUsers;
-});
 
 export const userSlice = createSlice({
   name: 'user',

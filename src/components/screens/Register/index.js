@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { register } from '../../../store/Auth';
+import { register } from '../../../store/Auth/thunks';
 import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
 import Button from '../../common/Button';

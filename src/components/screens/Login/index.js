@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { login, signOut } from '../../../store/Auth';
+import { login, signOut } from '../../../store/Auth/thunks';
 import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
 import Button from '../../common/Button';

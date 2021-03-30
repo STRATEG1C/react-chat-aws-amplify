@@ -1,7 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Auth, graphqlOperation, API } from 'aws-amplify';
-import { getUser } from '../../graphql/queries';
-import { createUser } from '../../graphql/mutations';
+import { createSlice } from '@reduxjs/toolkit';
+import { login, register, signOut } from './thunks';
 
 const initialState = {
   user: null,
@@ -10,49 +8,6 @@ const initialState = {
   isError: false,
   isRegistered: false
 };
-
-export const register = createAsyncThunk('Register', async ({ email, username, password, repeatPassword }) => {
-  console.log(`Register user with ${email} and ${password}...`);
-  await Auth.signUp({
-    username: email,
-    password,
-    attributes: {
-      email,
-      nickname: username
-    }
-  });
-});
-
-export const login = createAsyncThunk('LOGIN', async ({ email, password }) => {
-  try {
-    const res = await Auth.signIn({
-      username: email,
-      password
-    });
-
-    const {sub, nickname} = res.attributes;
-    const userQueryRes = await API.graphql(graphqlOperation(getUser, {id: sub}))
-    let user = userQueryRes.data.getUser;
-
-    if (!user) {
-      const userData = {
-        id: sub,
-        email: email,
-        username: nickname
-      };
-      const createUserRes = await API.graphql(graphqlOperation(createUser, {input: userData}))
-      user = createUserRes.data.createUser;
-    }
-
-    return user;
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-export const signOut = createAsyncThunk('SIGN_OUT', async () => {
-  return await Auth.signOut();
-});
 
 export const authSlice = createSlice({
   name: 'auth',

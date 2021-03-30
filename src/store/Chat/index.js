@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { graphqlOperation, API } from 'aws-amplify';
-import { getChatRoom, listChatRooms, messagesByChatId } from '../../graphql/queries';
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchChatRoom, fetchChats } from './thunks';
 
 const initialState = {
   items: [],
@@ -8,27 +7,6 @@ const initialState = {
   isLoading: false,
   isError: true
 };
-
-export const fetchChats = createAsyncThunk('FETCH_CHATS', async (userId) => {
-  const filter = {
-    or: [
-      { initiatorId: { eq: userId } },
-      { subscriberId: { eq: userId } },
-    ]
-  }
-  const getChatRes = await API.graphql(graphqlOperation(listChatRooms, { filter }));
-  return getChatRes.data.listChatRooms;
-});
-
-export const fetchChatRoom = createAsyncThunk('FETCH_CHAT_ROOM', async (chatId) => {
-  const chatRoomRes = await API.graphql(graphqlOperation(getChatRoom, { id: chatId }));
-  const chatRoom = chatRoomRes.data.getChatRoom;
-
-  const chatMessagesRes = await API.graphql(graphqlOperation(messagesByChatId, { chatId, sortDirection: 'DESC' }));
-  const messages = chatMessagesRes.data.messagesByChatId.items;
-
-  return { ...chatRoom, messages };
-});
 
 export const chatSlice = createSlice({
   name: 'chat',

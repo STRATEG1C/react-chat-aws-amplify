@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchChatRoom, selectCurrentChatRoom, setRoomData } from '../../../store/Chat';
+import { selectCurrentChatRoom, setRoomData } from '../../../store/Chat';
+import { fetchChatRoom } from '../../../store/Chat/thunks';
 import PageWrapper from '../../common/PageWrapper';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatMessage from './ChatMessage';
