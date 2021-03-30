@@ -1,6 +1,18 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onMessageByChatId = /* GraphQL */ `
+  subscription OnMessageByChatId($chatId: ID!) {
+    onMessageByChatId(chatId: $chatId) {
+      id
+      chatId
+      authorId
+      body
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateChatRoom = /* GraphQL */ `
   subscription OnCreateChatRoom {
     onCreateChatRoom {
@@ -10,6 +22,17 @@ export const onCreateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        items {
+          id
+          chatId
+          authorId
+          body
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -24,6 +47,17 @@ export const onUpdateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        items {
+          id
+          chatId
+          authorId
+          body
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -38,6 +72,17 @@ export const onDeleteChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        items {
+          id
+          chatId
+          authorId
+          body
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

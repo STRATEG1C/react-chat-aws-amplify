@@ -13,8 +13,8 @@ class UserProvider {
     return res.data.getUser;
   }
 
-  async getList(by = null, limit = null) {
-    const res = await API.graphql(graphqlOperation(listUsers));
+  async getList(filter = null, limit = null) {
+    const res = await API.graphql(graphqlOperation(listUsers, { filter, limit }));
     const { items, nextToken } = res.data.listUsers;
     return {
       items,

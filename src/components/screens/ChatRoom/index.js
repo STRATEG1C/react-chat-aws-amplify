@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
@@ -14,24 +14,24 @@ import AddMessageBlock from './AddMessageForm';
 const chatService = new ChatService(new ChatProvider());
 
 const ChatRoom = ({ match }) => {
-  const [subscription, setSubscription] = useState(null);
-
   const dispatch = useDispatch();
   const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
   const isLoading = useSelector(state => state.chat.isLoading);
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
+  let subscription;
+
   useEffect(() => {
     const { chatId } = match.params;
     dispatch(fetchChatRoom(chatId));
-  }, [dispatch, match.params]);
+  }, []);
 
   useEffect(() => {
     if (!chatRoomData) {
       return;
     }
 
-    setSubscription(chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
+    subscription = chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
       dispatch(setRoomData({
         ...chatRoomData,
         messages: [
@@ -39,13 +39,12 @@ const ChatRoom = ({ match }) => {
           ...chatRoomData.messages
         ]
       }));
-    }));
+    });
 
     return () => {
       subscription.unsubscribe();
-      setSubscription(null);
     }
-  }, [chatRoomData, dispatch, subscription]);
+  }, [chatRoomData]);
 
   const onAddMessage = async (message) => {
     const { chatId } = match.params;

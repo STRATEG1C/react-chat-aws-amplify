@@ -5,11 +5,13 @@ type ChatRoom @model {
   subscriberId: String!
   subscriberUsername: String!
   lastMessage: String
+  messages: [Message] @connection(keyName: "byChat", fields: ["id"])
 }
 
 type Message
 @model
 @key(name: "byChatId", fields: ["chatId", "createdAt"], queryField: "messagesByChatId")
+@key(name: "byChat", fields: ["chatId", "body"])
 {
   id: ID!
   chatId: ID!
@@ -23,4 +25,9 @@ type User @model {
   id: ID!
   email: String!
   username: String!
+}
+
+type Subscription {
+  onMessageByChatId(chatId: ID!): Message
+    @aws_subscribe(mutations: ["createMessage"])
 }

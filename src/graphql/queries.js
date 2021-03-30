@@ -10,6 +10,17 @@ export const getChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      messages {
+        items {
+          id
+          chatId
+          authorId
+          body
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -29,6 +40,9 @@ export const listChatRooms = /* GraphQL */ `
         subscriberId
         subscriberUsername
         lastMessage
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }

@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { getChatRoom, listChatRooms, messagesByChatId } from '../graphql/queries';
 import { createChatRoom, createMessage } from '../graphql/mutations';
-import { onCreateMessage } from '../graphql/subscriptions';
+import { onMessageByChatId } from '../graphql/subscriptions';
 
 class ChatProvider {
   async create(data) {
@@ -23,8 +23,8 @@ class ChatProvider {
     };
   }
 
-  async getList(by, limit) {
-    const res = await API.graphql(graphqlOperation(listChatRooms, { by, limit }));
+  async getList(filter, limit) {
+    const res = await API.graphql(graphqlOperation(listChatRooms, { filter, limit }));
     const { items, nextToken } = res.data.listChatRooms;
     return {
       items,
@@ -40,7 +40,7 @@ class ChatProvider {
   subscribeToRoom(id, callback) {
     const subscription = API.graphql(
       {
-        query: onCreateMessage,
+        query: onMessageByChatId,
         variables: {
           chatId: id
         }
@@ -49,7 +49,7 @@ class ChatProvider {
       next({ value }) {
         console.log(`[Subscription to chat ${id}]: `, value);
 
-        const newMessage = value.data.onCreateMessage;
+        const newMessage = value.data.onMessageByChatId;
 
         if (newMessage.chatId !== id) {
           return;
