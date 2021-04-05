@@ -1,4 +1,5 @@
-[ - ] Replace notifications with toasts <br>
-[ - ] Add access control. Only owners can access their chats <br>
-[ - ] Refactoring <br>
-[ - ] Make tutorial <br>
+- [ - ] Fix lazy loading
+- [ - ] Replace notifications with toasts
+- [ - ] Add access control. Only owners can access their chats
+- [ - ] Refactoring
+- [ - ] Make tutorial
