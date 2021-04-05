@@ -1,7 +1,11 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { getChatRoom, listChatRooms, messagesByChatId } from '../graphql/queries';
-import { createChatRoom, createMessage } from '../graphql/mutations';
-import { onMessageByChatId } from '../graphql/subscriptions';
+import { createChatRoom, createMessage, updateChatRoom } from '../graphql/mutations';
+import {
+  onCreateChatRoomBySubscriberId,
+  onMessageByChatId,
+  onUpdateChatRoomById,
+} from '../graphql/subscriptions';
 
 class ChatProvider {
   async create(data) {
@@ -38,6 +42,13 @@ class ChatProvider {
     };
   }
 
+  async update(chatId, data) {
+    const res = await API.graphql(graphqlOperation(updateChatRoom, {
+      input: data
+    }));
+    return res.data.updateChatRoom;
+  }
+
   async createChatMessage(message) {
     const res = await API.graphql(graphqlOperation(createMessage, { input: message }));
     return res.data.createMessage;
@@ -55,6 +66,42 @@ class ChatProvider {
       next({ value }) {
         const newMessage = value.data.onMessageByChatId;
         callback(newMessage)
+      }
+    });
+
+    return subscription;
+  }
+
+  subscribeToCreationNewRoom(userId, callback) {
+    const subscription = API.graphql(
+      {
+        query: onCreateChatRoomBySubscriberId,
+        variables: {
+          subscriberId: userId
+        }
+      }
+    ).subscribe({
+      next({ value }) {
+        const newRoom = value.data.onCreateChatRoomBySubscriberId;
+        callback(newRoom);
+      }
+    });
+
+    return subscription;
+  }
+
+  subscribeToUpdateRoom(id, callback) {
+    const subscription = API.graphql(
+      {
+        query: onUpdateChatRoomById,
+        variables: {
+          id
+        }
+      }
+    ).subscribe({
+      next({ value }) {
+        const newRoom = value.data.onUpdateChatRoomById;
+        callback(newRoom);
       }
     });
 

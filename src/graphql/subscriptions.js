@@ -13,6 +13,56 @@ export const onMessageByChatId = /* GraphQL */ `
     }
   }
 `;
+export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
+  subscription OnCreateChatRoomBySubscriberId($subscriberId: String!) {
+    onCreateChatRoomBySubscriberId(subscriberId: $subscriberId) {
+      id
+      initiatorId
+      initiatorUsername
+      subscriberId
+      subscriberUsername
+      lastMessage
+      messages {
+        items {
+          id
+          chatId
+          authorId
+          body
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateChatRoomById = /* GraphQL */ `
+  subscription OnUpdateChatRoomById($id: ID!) {
+    onUpdateChatRoomById(id: $id) {
+      id
+      initiatorId
+      initiatorUsername
+      subscriberId
+      subscriberUsername
+      lastMessage
+      messages {
+        items {
+          id
+          chatId
+          authorId
+          body
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateChatRoom = /* GraphQL */ `
   subscription OnCreateChatRoom {
     onCreateChatRoom {

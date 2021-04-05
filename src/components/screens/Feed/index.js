@@ -53,10 +53,10 @@ const Feed = () => {
           initiatorUsername: currentUser.username,
           subscriberId: subscriberUser.id,
           subscriberUsername: subscriberUser.username,
-          lastMessage: ''
+          lastMessage: 'New room created!'
         }
 
-        room = chatService.create(newChatRoomData);
+        room = await chatService.create(newChatRoomData);
       }
     }
 

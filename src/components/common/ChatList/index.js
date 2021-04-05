@@ -24,6 +24,7 @@ const ChatList = ({ onChatClick }) => {
                 ? item.subscriberUsername
                 : item.initiatorUsername
             }</p>
+            <span>{item.lastMessage}</span>
           </div>
         ))}
       </div>

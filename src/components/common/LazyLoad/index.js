@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { debounce } from '../../../helpers/debounce';
 
@@ -11,19 +11,7 @@ const LazyLoad = ({
 }) => {
   const ref = useRef(null);
 
-  useEffect(() => {
-    if (!ref) {
-      return;
-    }
-
-    addListeners();
-
-    return () => {
-      removeListeners();
-    }
-  }, [ref])
-
-  const onScrollResize = () => {
+  const onScrollResize = useCallback(() => {
     if (!ref) {
       return;
     }
@@ -37,18 +25,24 @@ const LazyLoad = ({
         onLoadMore();
       }
     }
-  }
+  }, [ref, isDisabledLoad, onLoadMore, scrollBuffer]);
 
-  const addListeners = () => {
+  useEffect(() => {
+    if (!ref) {
+      return;
+    }
+
+    const node = ref.current;
+
     const trigger = debounce(onScrollResize, 300);
-    ref.current.addEventListener('scroll', trigger);
-    ref.current.addEventListener('resize', trigger);
-  }
+    node.addEventListener('scroll', trigger);
+    node.addEventListener('resize', trigger);
 
-  const removeListeners = () => {
-    ref.current.removeEventListener('scroll', onScrollResize);
-    ref.current.removeEventListener('resize', onScrollResize);
-  }
+    return () => {
+      node.removeEventListener('scroll', onScrollResize);
+      node.removeEventListener('resize', onScrollResize);
+    }
+  }, [ref, onScrollResize])
 
   return (
     <div

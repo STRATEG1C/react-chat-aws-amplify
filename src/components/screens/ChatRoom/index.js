@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
@@ -23,22 +23,21 @@ const ChatRoom = ({ match }) => {
   const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
   const chatMessages = useSelector(state => selectRoomMessages(state.chat));
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
-  const isLoading = useSelector(state => state.chat.isLoading);
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  let subscription;
+  let subscription = useRef(null);
 
   useEffect(() => {
     dispatch(fetchChatRoom(chatId));
     dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE }));
-  }, []);
+  }, [chatId, dispatch]);
 
   useEffect(() => {
     if (!chatRoomData) {
       return;
     }
 
-    subscription = chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
+    subscription.current = chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
       dispatch(setMessages([
         newMessage,
         ...chatMessages
@@ -46,9 +45,9 @@ const ChatRoom = ({ match }) => {
     });
 
     return () => {
-      subscription.unsubscribe();
+      subscription.current.unsubscribe();
     }
-  }, [chatRoomData]);
+  }, [chatRoomData, chatMessages, dispatch]);
 
   const onAddMessage = async (message) => {
     const { chatId } = match.params;
@@ -60,7 +59,13 @@ const ChatRoom = ({ match }) => {
       body: message
     };
 
+    const { createdAt, updatedAt, messages, ...restChatRoomData } = chatRoomData;
+
     await chatService.createChatMessage(newMessage);
+    await chatService.update(chatId, {
+      ...restChatRoomData,
+      lastMessage: message
+    });
   }
 
   const onLoadMoreMessages = async () => {

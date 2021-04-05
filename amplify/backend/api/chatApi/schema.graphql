@@ -30,4 +30,10 @@ type User @model {
 type Subscription {
   onMessageByChatId(chatId: ID!): Message
     @aws_subscribe(mutations: ["createMessage"])
+
+  onCreateChatRoomBySubscriberId(subscriberId: String!): ChatRoom
+    @aws_subscribe(mutations: ["createChatRoom"])
+
+  onUpdateChatRoomById(id: ID!): ChatRoom
+    @aws_subscribe(mutations: ["updateChatRoom"])
 }

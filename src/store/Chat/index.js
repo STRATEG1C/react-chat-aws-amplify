@@ -14,6 +14,13 @@ export const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
+    addRoom: (state, action) => {
+      state.chatRooms = [action.payload, ...state.chatRooms];
+    },
+    updateRoom: (state, action) => {
+      const targetRoom = state.chatRooms.find(item => item.id === action.payload.id);
+      Object.keys(action.payload).forEach(key => targetRoom[key] = action.payload[key]);
+    },
     setMessages: (state, action) => {
       state.messages = action.payload;
     },
@@ -63,7 +70,7 @@ export const chatSlice = createSlice({
   }
 });
 
-export const { setMessages } = chatSlice.actions;
+export const { addRoom, updateRoom, setMessages } = chatSlice.actions;
 
 export const selectAllChats = state => state.chatRooms;
 export const selectCurrentChatRoom = state => state.chatRoom;
