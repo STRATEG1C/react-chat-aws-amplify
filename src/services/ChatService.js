@@ -13,8 +13,8 @@ class ChatService {
     return this._provider.getById(id);
   }
 
-  async getMessagesByChatId(chatId, limit) {
-    return this._provider.getMessagesByChatId(chatId, limit);
+  async getMessagesByChatId(chatId, limit, page) {
+    return this._provider.getMessagesByChatId(chatId, limit, page);
   }
 
   async getList(by, limit) {

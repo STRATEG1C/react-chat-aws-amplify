@@ -5,13 +5,13 @@ type ChatRoom @model {
   subscriberId: String!
   subscriberUsername: String!
   lastMessage: String
-  messages: [Message] @connection(keyName: "byChat", fields: ["id"])
+  messages: [Message] @connection(keyName: "chatMessages", fields: ["id"])
 }
 
 type Message
 @model
 @key(name: "byChatId", fields: ["chatId", "createdAt"], queryField: "messagesByChatId")
-@key(name: "byChat", fields: ["chatId", "body"])
+@key(name: "chatMessages", fields: ["chatId"])
 {
   id: ID!
   chatId: ID!

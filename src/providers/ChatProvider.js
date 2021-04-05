@@ -14,8 +14,14 @@ class ChatProvider {
     return res.data.getChatRoom;
   }
 
-  async getMessagesByChatId(chatId, limit) {
-    const res = await API.graphql(graphqlOperation(messagesByChatId, { chatId, sortDirection: 'DESC', limit }));
+  async getMessagesByChatId(chatId, limit, next) {
+    const res = await API.graphql(graphqlOperation(messagesByChatId, {
+      chatId,
+      sortDirection: 'DESC',
+      limit,
+      nextToken: next
+    }));
+
     const { items, nextToken } = res.data.messagesByChatId;
     return {
       items,
@@ -47,15 +53,8 @@ class ChatProvider {
       }
     ).subscribe({
       next({ value }) {
-        console.log(`[Subscription to chat ${id}]: `, value);
-
         const newMessage = value.data.onMessageByChatId;
-
-        if (newMessage.chatId !== id) {
-          return;
-        }
-
-        callback(value.data.onCreateMessage);
+        callback(newMessage)
       }
     });
 

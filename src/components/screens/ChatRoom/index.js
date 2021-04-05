@@ -2,28 +2,35 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
-import { selectCurrentChatRoom, setRoomData } from '../../../store/Chat';
-import { fetchChatRoom } from '../../../store/Chat/thunks';
+import { selectCurrentChatRoom, selectNextMessages, selectRoomMessages, setMessages } from '../../../store/Chat';
+import { fetchChatRoom, fetchMessages } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
 import PageWrapper from '../../common/PageWrapper';
 import ChatMessage from './ChatMessage';
 import AddMessageBlock from './AddMessageForm';
+import LazyLoad from '../../common/LazyLoad';
 
 const chatService = new ChatService(new ChatProvider());
 
+const MESSAGES_PER_PAGE = 20;
+
 const ChatRoom = ({ match }) => {
+  const { chatId } = match.params;
+
   const dispatch = useDispatch();
   const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
+  const chatMessages = useSelector(state => selectRoomMessages(state.chat));
+  const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const isLoading = useSelector(state => state.chat.isLoading);
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
   let subscription;
 
   useEffect(() => {
-    const { chatId } = match.params;
     dispatch(fetchChatRoom(chatId));
+    dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE }));
   }, []);
 
   useEffect(() => {
@@ -32,13 +39,10 @@ const ChatRoom = ({ match }) => {
     }
 
     subscription = chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
-      dispatch(setRoomData({
-        ...chatRoomData,
-        messages: [
-          newMessage,
-          ...chatRoomData.messages
-        ]
-      }));
+      dispatch(setMessages([
+        newMessage,
+        ...chatMessages
+      ]));
     });
 
     return () => {
@@ -59,13 +63,15 @@ const ChatRoom = ({ match }) => {
     await chatService.createChatMessage(newMessage);
   }
 
-  if (isLoading || !chatRoomData) {
+  const onLoadMoreMessages = async () => {
+    dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
+  }
+
+  if (!chatRoomData) {
     return (
       <div>Loading...</div>
     )
   }
-
-  const { messages } = chatRoomData;
 
   return (
     <PageWrapper title={`Chat with ${
@@ -75,15 +81,18 @@ const ChatRoom = ({ match }) => {
     }`}>
       <Link to="/">To feed</Link>
       <AddMessageBlock onAdd={onAddMessage} />
-      <div className="chat-room">
-        {messages.map(message => (
+      <LazyLoad
+        className="chat-room"
+        onLoadMore={onLoadMoreMessages}
+      >
+        {chatMessages.map(message => (
           <ChatMessage
             key={message.id}
             message={message}
             isOwn={currentUser.id === message.authorId}
           />
         ))}
-      </div>
+      </LazyLoad>
       <hr/>
     </PageWrapper>
   );

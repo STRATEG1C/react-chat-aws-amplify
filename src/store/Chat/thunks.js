@@ -12,15 +12,14 @@ export const fetchChats = createAsyncThunk('FETCH_CHATS', async (userId) => {
     ]
   }
   const { items } = await chatService.getList(filter);
-
-  console.log(items.map((item => [ item.initiatorId, item.subscriberId ])));
-  console.log(userId);
-
   return { items };
 });
 
 export const fetchChatRoom = createAsyncThunk('FETCH_CHAT_ROOM', async (chatId) => {
-  const chatRoom = await chatService.getById(chatId);
-  const { items: messages } = await chatService.getMessagesByChatId(chatId);
-  return { ...chatRoom, messages };
+  return await chatService.getById(chatId);
 });
+
+export const fetchMessages = createAsyncThunk('FETCH_MESSAGES', async ({ chatId, limit, next }) => {
+  const { items, nextToken } = await chatService.getMessagesByChatId(chatId, limit, next);
+  return { items, nextToken }
+})
