@@ -68,8 +68,11 @@ const ChatRoom = ({ match }) => {
     });
   }
 
-  const onLoadMoreMessages = async () => {
-    dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
+  const onLoadMoreMessages = () => {
+    console.log(nextChatMessages);
+    if (nextChatMessages) {
+      dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
+    }
   }
 
   if (!chatRoomData) {

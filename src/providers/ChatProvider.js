@@ -25,21 +25,12 @@ class ChatProvider {
       limit,
       nextToken: next
     }));
-
-    const { items, nextToken } = res.data.messagesByChatId;
-    return {
-      items,
-      next: nextToken
-    };
+    return res.data.messagesByChatId;
   }
 
   async getList(filter, limit) {
     const res = await API.graphql(graphqlOperation(listChatRooms, { filter, limit }));
-    const { items, nextToken } = res.data.listChatRooms;
-    return {
-      items,
-      next: nextToken
-    };
+    return res.data.listChatRooms
   }
 
   async update(chatId, data) {

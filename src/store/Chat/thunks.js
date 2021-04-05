@@ -20,6 +20,5 @@ export const fetchChatRoom = createAsyncThunk('FETCH_CHAT_ROOM', async (chatId) 
 });
 
 export const fetchMessages = createAsyncThunk('FETCH_MESSAGES', async ({ chatId, limit, next }) => {
-  const { items, nextToken } = await chatService.getMessagesByChatId(chatId, limit, next);
-  return { items, nextToken }
+  return await chatService.getMessagesByChatId(chatId, limit, next);
 })

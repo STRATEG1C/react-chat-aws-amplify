@@ -11,45 +11,28 @@ const LazyLoad = ({
 }) => {
   const ref = useRef(null);
 
-  const onScrollResize = useCallback(() => {
+  const onScrollResize = debounce(() => {
     if (!ref) {
       return;
     }
 
-    const heightOfScrolledContent = ref.current.scrollTop + ref.current.offsetHeight;
-    const heightOfAllContent = ref.current.offsetHeight;
+    const heightOfScrolledContent = ref.current.scrollTop + ref.current.clientHeight;
+    const heightOfAllContent = ref.current.scrollHeight;
     const heightOfNotScrolledContent = heightOfAllContent - heightOfScrolledContent;
 
     if (heightOfNotScrolledContent < scrollBuffer) {
       if (!isDisabledLoad) {
-        // TODO: component needs refactoring
-        // onLoadMore();
+        onLoadMore();
       }
     }
-  }, [ref, isDisabledLoad, onLoadMore, scrollBuffer]);
-
-  useEffect(() => {
-    if (!ref) {
-      return;
-    }
-
-    const node = ref.current;
-
-    const trigger = debounce(onScrollResize, 300);
-    node.addEventListener('scroll', trigger);
-    node.addEventListener('resize', trigger);
-
-    return () => {
-      node.removeEventListener('scroll', onScrollResize);
-      node.removeEventListener('resize', onScrollResize);
-    }
-  }, [ref, onScrollResize])
+  }, 200);
 
   return (
     <div
       style={{height: '200px', overflow: 'scroll'}}
       className={`lazy-load ${className}`}
       ref={ ref }
+      onScroll={onScrollResize}
     >
       { children }
     </div>
