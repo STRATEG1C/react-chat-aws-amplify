@@ -3,11 +3,7 @@
 1. Склонировать этот репозиторий
 2. Установить зависимости
 #### `npm install`
-3. Установить json-server для фейкового backend
-#### `npm install -g json-server`
-4. Запустить фейковый backend (файл server.json в корне проекта)
-#### `json-server --watch server.json`
-5. Запустить проект в дев режиме
+3. Запустить проект в дев режиме
 #### `npm start`
 
 # Getting Started with Create React App
