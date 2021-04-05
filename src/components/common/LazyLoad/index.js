@@ -22,7 +22,8 @@ const LazyLoad = ({
 
     if (heightOfNotScrolledContent < scrollBuffer) {
       if (!isDisabledLoad) {
-        onLoadMore();
+        // TODO: component needs refactoring
+        // onLoadMore();
       }
     }
   }, [ref, isDisabledLoad, onLoadMore, scrollBuffer]);
