@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Amplify } from 'aws-amplify';
+import { ToastContainer } from 'react-toastify';
 import awsmobile from './aws-exports';
 import store from './store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
 
 Amplify.configure(awsmobile);
@@ -14,6 +16,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
+      <ToastContainer />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

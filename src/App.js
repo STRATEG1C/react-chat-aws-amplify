@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { selectCurrentUser } from './store/Auth';
 import { addRoom, selectAllChats, updateRoom } from './store/Chat';
 import ChatService from './services/ChatService';
@@ -23,7 +24,7 @@ const App = () => {
     .catch((e) => console.log(e));
 
   const onNewChat = useCallback((newRoom) => {
-    new Notification('Somebody new wrote to you!');
+    toast('Somebody new wrote to you!');
     dispatch(addRoom(newRoom));
   }, [dispatch])
 
@@ -54,7 +55,7 @@ const App = () => {
 
     chatRooms.forEach(chat => {
       const subscription = chatService.subscribeToUpdateRoom(chat.id, (newRoom) => {
-        new Notification(newRoom.lastMessage);
+        toast(newRoom.lastMessage);
         onUpdateChat(newRoom);
       });
       subscriptions.push(subscription);
