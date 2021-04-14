@@ -35,6 +35,10 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
+
+  }, []);
+
+  useEffect(() => {
     if (!currentUser || !currentUser.id) {
       return;
     }

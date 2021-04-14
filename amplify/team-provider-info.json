@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "reactchatawsamplify6985e8ca": {}
+      },
+      "function": {
+        "ChatResolver": {
+          "deploymentBucketName": "amplify-reactchatawsamplify-dev-125714-deployment",
+          "s3Key": "amplify-builds/ChatResolver-5273314a475971373567-build.zip"
+        }
       }
     }
   }

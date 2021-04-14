@@ -23,5 +23,12 @@
         }
       }
     }
+  },
+  "function": {
+    "ChatResolver": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
   }
 }
