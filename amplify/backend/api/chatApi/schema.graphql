@@ -1,10 +1,11 @@
 type ChatRoom @model {
   id: ID!
-  initiatorId: String!
+  initiatorId: ID!
   initiatorUsername: String!
-  subscriberId: String!
+  subscriberId: ID!
   subscriberUsername: String!
   lastMessage: String
+  lastMessageAuthorId: ID
   messages: [Message] @connection(keyName: "chatMessages", fields: ["id"])
 }
 
@@ -15,7 +16,7 @@ type Message
 {
   id: ID!
   chatId: ID!
-  authorId: String!
+  authorId: ID!
   body: String!
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
@@ -31,7 +32,7 @@ type Subscription {
   onMessageByChatId(chatId: ID!): Message
     @aws_subscribe(mutations: ["createMessage"])
 
-  onCreateChatRoomBySubscriberId(subscriberId: String!): ChatRoom
+  onCreateChatRoomBySubscriberId(subscriberId: ID!): ChatRoom
     @aws_subscribe(mutations: ["createChatRoom"])
 
   onUpdateChatRoomById(id: ID!): ChatRoom

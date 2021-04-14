@@ -64,12 +64,12 @@ const ChatRoom = ({ match }) => {
     await chatService.createChatMessage(newMessage);
     await chatService.update(chatId, {
       ...restChatRoomData,
-      lastMessage: message
+      lastMessage: message,
+      lastMessageAuthorId: currentUser.id
     });
   }
 
   const onLoadMoreMessages = () => {
-    console.log(nextChatMessages);
     if (nextChatMessages) {
       dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
     }

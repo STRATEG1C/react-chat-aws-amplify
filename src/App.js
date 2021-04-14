@@ -17,18 +17,20 @@ const App = () => {
   let subscriptionToCreateRooms = useRef(null);
   let subscriptionsToUpdateRooms = useRef([]);
 
-  Notification.requestPermission()
-    .then(() => {
-      console.log('Notifications turned on!');
-    })
-    .catch((e) => console.log(e));
-
   const onNewChat = useCallback((newRoom) => {
     toast('Somebody new wrote to you!');
     dispatch(addRoom(newRoom));
   }, [dispatch])
 
   const onUpdateChat = useCallback((updatedRoom) => {
+    if (updatedRoom.lastMessageAuthorId !== currentUser.id) {
+      const username = updatedRoom.lastMessageAuthorId === updatedRoom.initiatorId
+        ? updatedRoom.initiatorUsername
+        : updatedRoom.subscriberUsername;
+
+      toast(`New message from ${username}: ${updatedRoom.lastMessage}`);
+    }
+
     dispatch(updateRoom(updatedRoom));
   }, [dispatch]);
 
@@ -55,7 +57,6 @@ const App = () => {
 
     chatRooms.forEach(chat => {
       const subscription = chatService.subscribeToUpdateRoom(chat.id, (newRoom) => {
-        toast(newRoom.lastMessage);
         onUpdateChat(newRoom);
       });
       subscriptions.push(subscription);

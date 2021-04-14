@@ -14,7 +14,7 @@ export const onMessageByChatId = /* GraphQL */ `
   }
 `;
 export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
-  subscription OnCreateChatRoomBySubscriberId($subscriberId: String!) {
+  subscription OnCreateChatRoomBySubscriberId($subscriberId: ID!) {
     onCreateChatRoomBySubscriberId(subscriberId: $subscriberId) {
       id
       initiatorId
@@ -22,6 +22,7 @@ export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      lastMessageAuthorId
       messages {
         items {
           id
@@ -47,6 +48,7 @@ export const onUpdateChatRoomById = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      lastMessageAuthorId
       messages {
         items {
           id
@@ -72,6 +74,7 @@ export const onCreateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      lastMessageAuthorId
       messages {
         items {
           id
@@ -97,6 +100,7 @@ export const onUpdateChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      lastMessageAuthorId
       messages {
         items {
           id
@@ -122,6 +126,7 @@ export const onDeleteChatRoom = /* GraphQL */ `
       subscriberId
       subscriberUsername
       lastMessage
+      lastMessageAuthorId
       messages {
         items {
           id
