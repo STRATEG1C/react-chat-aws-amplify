@@ -1,5 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser, listUsers } from '../graphql/queries';
+import { getUser as newCallForGetUser } from '../components/common/ChatList/queries';
 import { createUser } from '../graphql/mutations';
 
 class UserProvider {
@@ -9,7 +10,7 @@ class UserProvider {
   }
 
   async getById(id) {
-    const res = await API.graphql(graphqlOperation(getUser, { id }));
+    const res = await API.graphql(graphqlOperation(newCallForGetUser, { id }));
     return res.data.getUser;
   }
 

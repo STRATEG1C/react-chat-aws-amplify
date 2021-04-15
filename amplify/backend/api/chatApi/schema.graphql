@@ -1,36 +1,45 @@
-type ChatRoom @model {
+type User
+@model {
   id: ID!
-  initiatorId: ID!
-  initiatorUsername: String!
-  subscriberId: ID!
-  subscriberUsername: String!
-  lastMessage: String
-  lastMessageAuthorId: ID
-  messages: [Message] @connection(keyName: "chatMessages", fields: ["id"])
+  email: String!
+  username: String!
+
+  status: String
+  chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type ChatRoomUser
+@model
+@key(name: "byUser", fields: ["userId", "chatRoomId"])
+@key(name: "byChatRoom", fields: ["chatRoomId", "userId"]) {
+  id: ID!
+  userId: ID!
+  chatRoomId: ID!
+  user: User @connection(fields: ["userId"])
+  chatRoom: ChatRoom @connection(fields: ["chatRoomId"])
+}
+
+type ChatRoom
+@model {
+  id: ID!
+  chatRoomUsers: [ChatRoomUser] @connection(keyName: "byChatRoom", fields: ["id"])
+  messages: [Message] @connection(keyName: "byChatRoom", fields: ["id"])
 }
 
 type Message
 @model
-@key(name: "byChatId", fields: ["chatId", "createdAt"], queryField: "messagesByChatId")
-@key(name: "chatMessages", fields: ["chatId"])
-{
+@key(name: "byChatRoom", fields: ["chatRoomId", "createdAt"], queryField: "messagesByChatRoom") {
   id: ID!
-  chatId: ID!
-  authorId: ID!
-  body: String!
+  chatRoomId: ID!
+  userId: ID!
+  content: String!
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
-}
-
-type User @model {
-  id: ID!
-  email: String!
-  username: String!
+  user: User @connection(fields: ["userId"])
+  chatRoom: ChatRoom @connection(fields: ["chatRoomId"])
 }
 
 type Subscription {
-  onMessageByChatId(chatId: ID!): Message
-    @aws_subscribe(mutations: ["createMessage"])
 
   onCreateChatRoomBySubscriberId(subscriberId: ID!): ChatRoom
     @aws_subscribe(mutations: ["createChatRoom"])

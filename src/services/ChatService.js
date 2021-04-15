@@ -9,6 +9,10 @@ class ChatService {
     return this._provider.create(data);
   }
 
+  async addUserToRoom(userId, chatRoomId) {
+    return this._provider.addUserToRoom(userId, chatRoomId);
+  }
+
   async getById(id) {
     return this._provider.getById(id);
   }

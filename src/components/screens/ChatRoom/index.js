@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
 import { selectCurrentChatRoom, selectNextMessages, selectRoomMessages, setMessages } from '../../../store/Chat';
 import { fetchChatRoom, fetchMessages } from '../../../store/Chat/thunks';
@@ -17,7 +16,7 @@ const chatService = new ChatService(new ChatProvider());
 const MESSAGES_PER_PAGE = 20;
 
 const ChatRoom = ({ match }) => {
-  const { chatId } = match.params;
+  const { chatId, chatName } = match.params;
 
   const dispatch = useDispatch();
   const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
@@ -25,48 +24,25 @@ const ChatRoom = ({ match }) => {
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  let subscription = useRef(null);
-
   useEffect(() => {
     dispatch(fetchChatRoom(chatId));
     dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE }));
   }, [chatId, dispatch]);
 
-  useEffect(() => {
-    if (!chatRoomData) {
-      return;
-    }
-
-    subscription.current = chatService.subscribeToRoom(chatRoomData.id, (newMessage) => {
-      dispatch(setMessages([
-        newMessage,
-        ...chatMessages
-      ]));
-    });
-
-    return () => {
-      subscription.current.unsubscribe();
-    }
-  }, [chatRoomData, chatMessages, dispatch]);
-
   const onAddMessage = async (message) => {
-    const { chatId } = match.params;
+    try {
+      const { chatId } = match.params;
 
-    const newMessage = {
-      id: uuid(),
-      chatId: chatId,
-      authorId: currentUser.id,
-      body: message
-    };
+      const newMessage = {
+        chatRoomId: chatId,
+        userId: currentUser.id,
+        content: message
+      };
 
-    const { createdAt, updatedAt, messages, ...restChatRoomData } = chatRoomData;
-
-    await chatService.createChatMessage(newMessage);
-    await chatService.update(chatId, {
-      ...restChatRoomData,
-      lastMessage: message,
-      lastMessageAuthorId: currentUser.id
-    });
+      await chatService.createChatMessage(newMessage);
+    } catch (err) {
+      console.log('Error while adding message', err);
+    }
   }
 
   const onLoadMoreMessages = () => {
@@ -82,11 +58,7 @@ const ChatRoom = ({ match }) => {
   }
 
   return (
-    <PageWrapper title={`Chat with ${
-      chatRoomData.initiatorId === currentUser.id
-        ? chatRoomData.subscriberUsername
-        : chatRoomData.initiatorUsername
-    }`}>
+    <PageWrapper title={`Chat with ${chatName}`}>
       <Link to="/">To feed</Link>
       <AddMessageBlock onAdd={onAddMessage} />
       <LazyLoad
@@ -97,7 +69,7 @@ const ChatRoom = ({ match }) => {
           <ChatMessage
             key={message.id}
             message={message}
-            isOwn={currentUser.id === message.authorId}
+            isOwn={currentUser.id === message.userId}
           />
         ))}
       </LazyLoad>

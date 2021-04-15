@@ -21,58 +21,56 @@ const Feed = () => {
   const history = useHistory();
 
   const onUserClick = async (userId) => {
-    let room;
+    try {
+      let chatRoom;
 
-    const filter = {
-      or: [
-        {
-          and: [
-            { initiatorId: { eq: userId } },
-            { subscriberId: { eq: currentUser.id } }
-          ]
-        },
-        {
-          and: [
-            { initiatorId: { eq: currentUser.id } },
-            { subscriberId: { eq: userId } }
-          ]
-        }
-      ]
-    }
+      // 0 Check if room with this user already exists
+      // const filter = {
+      //   or: [
+      //     {
+      //       and: [
+      //         { initiatorId: { eq: userId } },
+      //         { subscriberId: { eq: currentUser.id } }
+      //       ]
+      //     },
+      //     {
+      //       and: [
+      //         { initiatorId: { eq: currentUser.id } },
+      //         { subscriberId: { eq: userId } }
+      //       ]
+      //     }
+      //   ]
+      // }
+      // const rooms = await chatService.getList(filter, 1);
 
-    const roomsRes = await chatService.getList(filter, 1);
-    room = roomsRes[0];
+      // TODO: Add checking
+      if (false) {
+        // chatRoom = rooms[0];
+      } else {
+        // 1. Create a new ChatRoom
+        chatRoom = await chatService.create({});
 
-    if (!room) {
-      const subscriberUser = await userService.getById(userId);
+        // 2. Add User to the ChatRoom
+        await chatService.addUserToRoom(userId, chatRoom.id);
 
-      if (subscriberUser) {
-        const newChatRoomData = {
-          id: uuid(),
-          initiatorId: currentUser.id,
-          initiatorUsername: currentUser.username,
-          subscriberId: subscriberUser.id,
-          subscriberUsername: subscriberUser.username,
-          lastMessage: 'New room created!'
-        }
-
-        room = await chatService.create(newChatRoomData);
+        // 3. Add authenticated user to the ChatRoom
+        await chatService.addUserToRoom(currentUser.id, chatRoom.id);
       }
-    }
 
-    history.push(`/chat/${room.id}`);
+      // 4. Navigate user to the room
+      history.push(`/chat/${chatRoom.id}/HardcodedName`);
+    } catch(err) {
+      console.log('Error while creating a new chat room', err);
+    }
   };
 
-  const onChatClick = (chatId) => {
-    history.push(`/chat/${chatId}`);
-  }
 
   return (
     <PageWrapper title="Feed">
       <UsersList onUserClick={onUserClick} currentUser={currentUser.id} />
       <br />
       <br />
-      <ChatList onChatClick={onChatClick} />
+      <ChatList />
     </PageWrapper>
   );
 }
