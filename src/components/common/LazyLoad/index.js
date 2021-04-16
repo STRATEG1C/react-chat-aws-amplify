@@ -29,7 +29,6 @@ const LazyLoad = ({
 
   return (
     <div
-      style={{height: '200px', overflow: 'scroll'}}
       className={`lazy-load ${className}`}
       ref={ ref }
       onScroll={onScrollResize}

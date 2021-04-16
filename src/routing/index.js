@@ -13,7 +13,7 @@ const Routing = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <AuthenticatedRoute exact path="/" component={Feed} />
-        <AuthenticatedRoute exact path="/chat/:chatId/:chatName" component={ChatRoom} />
+        <AuthenticatedRoute exact path="/chat/:chatId" component={ChatRoom} />
       </Switch>
     </Router>
   );

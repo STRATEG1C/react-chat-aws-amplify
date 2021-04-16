@@ -1,51 +1,52 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { selectCurrentChatRoom, selectNextMessages, selectRoomMessages, setMessages } from '../../../store/Chat';
+import { Link, useHistory } from 'react-router-dom';
+import { selectCurrentChatRoom, selectNextMessages, setMessages } from '../../../store/Chat';
 import { fetchChatRoom, fetchMessages } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
 import PageWrapper from '../../common/PageWrapper';
-import ChatMessage from './ChatMessage';
 import AddMessageBlock from './AddMessageForm';
 import LazyLoad from '../../common/LazyLoad';
+import MessageList from './MessageList';
 
 const chatService = new ChatService(new ChatProvider());
 
 const MESSAGES_PER_PAGE = 20;
 
 const ChatRoom = ({ match }) => {
-  const { chatId, chatName } = match.params;
-
   const dispatch = useDispatch();
+  const history = useHistory();
   const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
-  const chatMessages = useSelector(state => selectRoomMessages(state.chat));
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  useEffect(() => {
+  useEffect(async () => {
+    const { chatId } = match.params;
+    const userConversation = await chatService.getUserConversation(currentUser.id, chatId);
+
+    if (!userConversation) {
+      history.push('/');
+    }
+
     dispatch(fetchChatRoom(chatId));
-    dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE }));
-  }, [chatId, dispatch]);
+  }, []);
 
   const onAddMessage = async (message) => {
     try {
       const { chatId } = match.params;
-
-      const newMessage = {
-        chatRoomId: chatId,
-        userId: currentUser.id,
-        content: message
-      };
-
-      await chatService.createChatMessage(newMessage);
+      const newMessage = await chatService.createChatMessage(chatId, currentUser.id, message);
+      await chatService.updateChatRoom(chatId, {
+        lastMessageID: newMessage.id
+      });
     } catch (err) {
       console.log('Error while adding message', err);
     }
   }
 
   const onLoadMoreMessages = () => {
+    const { chatId } = match.params;
     if (nextChatMessages) {
       dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
     }
@@ -58,20 +59,16 @@ const ChatRoom = ({ match }) => {
   }
 
   return (
-    <PageWrapper title={`Chat with ${chatName}`}>
+    <PageWrapper title={`Chat with user`}>
       <Link to="/">To feed</Link>
       <AddMessageBlock onAdd={onAddMessage} />
       <LazyLoad
-        className="chat-room"
         onLoadMore={onLoadMoreMessages}
       >
-        {chatMessages.map(message => (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            isOwn={currentUser.id === message.userId}
-          />
-        ))}
+        <MessageList
+          messages={chatRoomData.messages.items}
+          ownUserId={currentUser.id}
+        />
       </LazyLoad>
       <hr/>
     </PageWrapper>

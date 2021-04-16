@@ -14,8 +14,8 @@ export const createUser = /* GraphQL */ `
       chatRoomUser {
         items {
           id
-          userId
-          chatRoomId
+          userID
+          chatRoomID
           createdAt
           updatedAt
         }
@@ -39,8 +39,8 @@ export const updateUser = /* GraphQL */ `
       chatRoomUser {
         items {
           id
-          userId
-          chatRoomId
+          userID
+          chatRoomID
           createdAt
           updatedAt
         }
@@ -64,8 +64,8 @@ export const deleteUser = /* GraphQL */ `
       chatRoomUser {
         items {
           id
-          userId
-          chatRoomId
+          userID
+          chatRoomID
           createdAt
           updatedAt
         }
@@ -76,15 +76,15 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
-export const createChatRoomUser = /* GraphQL */ `
-  mutation CreateChatRoomUser(
-    $input: CreateChatRoomUserInput!
-    $condition: ModelChatRoomUserConditionInput
+export const createUserConversation = /* GraphQL */ `
+  mutation CreateUserConversation(
+    $input: CreateUserConversationInput!
+    $condition: ModelUserConversationConditionInput
   ) {
-    createChatRoomUser(input: $input, condition: $condition) {
+    createUserConversation(input: $input, condition: $condition) {
       id
-      userId
-      chatRoomId
+      userID
+      chatRoomID
       user {
         id
         email
@@ -98,11 +98,35 @@ export const createChatRoomUser = /* GraphQL */ `
       }
       chatRoom {
         id
-        chatRoomUsers {
-          nextToken
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
         }
         messages {
           nextToken
+        }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
         }
         createdAt
         updatedAt
@@ -112,15 +136,15 @@ export const createChatRoomUser = /* GraphQL */ `
     }
   }
 `;
-export const updateChatRoomUser = /* GraphQL */ `
-  mutation UpdateChatRoomUser(
-    $input: UpdateChatRoomUserInput!
-    $condition: ModelChatRoomUserConditionInput
+export const updateUserConversation = /* GraphQL */ `
+  mutation UpdateUserConversation(
+    $input: UpdateUserConversationInput!
+    $condition: ModelUserConversationConditionInput
   ) {
-    updateChatRoomUser(input: $input, condition: $condition) {
+    updateUserConversation(input: $input, condition: $condition) {
       id
-      userId
-      chatRoomId
+      userID
+      chatRoomID
       user {
         id
         email
@@ -134,11 +158,35 @@ export const updateChatRoomUser = /* GraphQL */ `
       }
       chatRoom {
         id
-        chatRoomUsers {
-          nextToken
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
         }
         messages {
           nextToken
+        }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
         }
         createdAt
         updatedAt
@@ -148,15 +196,15 @@ export const updateChatRoomUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteChatRoomUser = /* GraphQL */ `
-  mutation DeleteChatRoomUser(
-    $input: DeleteChatRoomUserInput!
-    $condition: ModelChatRoomUserConditionInput
+export const deleteUserConversation = /* GraphQL */ `
+  mutation DeleteUserConversation(
+    $input: DeleteUserConversationInput!
+    $condition: ModelUserConversationConditionInput
   ) {
-    deleteChatRoomUser(input: $input, condition: $condition) {
+    deleteUserConversation(input: $input, condition: $condition) {
       id
-      userId
-      chatRoomId
+      userID
+      chatRoomID
       user {
         id
         email
@@ -170,11 +218,35 @@ export const deleteChatRoomUser = /* GraphQL */ `
       }
       chatRoom {
         id
-        chatRoomUsers {
-          nextToken
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
         }
         messages {
           nextToken
+        }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
         }
         createdAt
         updatedAt
@@ -191,26 +263,65 @@ export const createChatRoom = /* GraphQL */ `
   ) {
     createChatRoom(input: $input, condition: $condition) {
       id
-      chatRoomUsers {
-        items {
-          id
-          userId
-          chatRoomId
-          createdAt
-          updatedAt
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       messages {
         items {
           id
-          chatRoomId
-          userId
-          content
           createdAt
+          content
+          userID
+          chatRoomID
           updatedAt
         }
         nextToken
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
       }
       createdAt
       updatedAt
@@ -224,26 +335,65 @@ export const updateChatRoom = /* GraphQL */ `
   ) {
     updateChatRoom(input: $input, condition: $condition) {
       id
-      chatRoomUsers {
-        items {
-          id
-          userId
-          chatRoomId
-          createdAt
-          updatedAt
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       messages {
         items {
           id
-          chatRoomId
-          userId
-          content
           createdAt
+          content
+          userID
+          chatRoomID
           updatedAt
         }
         nextToken
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
       }
       createdAt
       updatedAt
@@ -257,26 +407,65 @@ export const deleteChatRoom = /* GraphQL */ `
   ) {
     deleteChatRoom(input: $input, condition: $condition) {
       id
-      chatRoomUsers {
-        items {
-          id
-          userId
-          chatRoomId
-          createdAt
-          updatedAt
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
         }
-        nextToken
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       messages {
         items {
           id
-          chatRoomId
-          userId
-          content
           createdAt
+          content
+          userID
+          chatRoomID
           updatedAt
         }
         nextToken
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
       }
       createdAt
       updatedAt
@@ -290,11 +479,10 @@ export const createMessage = /* GraphQL */ `
   ) {
     createMessage(input: $input, condition: $condition) {
       id
-      chatRoomId
-      userId
-      content
       createdAt
-      updatedAt
+      content
+      userID
+      chatRoomID
       user {
         id
         email
@@ -308,15 +496,40 @@ export const createMessage = /* GraphQL */ `
       }
       chatRoom {
         id
-        chatRoomUsers {
-          nextToken
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
         }
         messages {
           nextToken
         }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
         createdAt
         updatedAt
       }
+      updatedAt
     }
   }
 `;
@@ -327,11 +540,10 @@ export const updateMessage = /* GraphQL */ `
   ) {
     updateMessage(input: $input, condition: $condition) {
       id
-      chatRoomId
-      userId
-      content
       createdAt
-      updatedAt
+      content
+      userID
+      chatRoomID
       user {
         id
         email
@@ -345,15 +557,40 @@ export const updateMessage = /* GraphQL */ `
       }
       chatRoom {
         id
-        chatRoomUsers {
-          nextToken
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
         }
         messages {
           nextToken
         }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
         createdAt
         updatedAt
       }
+      updatedAt
     }
   }
 `;
@@ -364,11 +601,10 @@ export const deleteMessage = /* GraphQL */ `
   ) {
     deleteMessage(input: $input, condition: $condition) {
       id
-      chatRoomId
-      userId
-      content
       createdAt
-      updatedAt
+      content
+      userID
+      chatRoomID
       user {
         id
         email
@@ -382,15 +618,40 @@ export const deleteMessage = /* GraphQL */ `
       }
       chatRoom {
         id
-        chatRoomUsers {
-          nextToken
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
         }
         messages {
           nextToken
         }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
         createdAt
         updatedAt
       }
+      updatedAt
     }
   }
 `;

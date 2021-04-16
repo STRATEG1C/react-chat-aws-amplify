@@ -30,7 +30,7 @@ export const chatSlice = createSlice({
       state.isLoading = true;
     },
     [fetchChats.fulfilled]: (state, action) => {
-      state.chatRooms = action.payload.items;
+      state.chatRooms = action.payload;
       state.isLoading = false;
     },
     [fetchChats.rejected]: (state, action) => {
@@ -44,8 +44,6 @@ export const chatSlice = createSlice({
     },
     [fetchChatRoom.fulfilled]: (state, action) => {
       state.chatRoom = action.payload;
-      // state.messages = action.payload.messages.items;
-      // state.nextMessages = action.payload.messages.nextToken;
       state.isLoading = false;
     },
     [fetchChatRoom.rejected]: (state, action) => {
@@ -74,7 +72,6 @@ export const { addRoom, updateRoom, setMessages } = chatSlice.actions;
 
 export const selectAllChats = state => state.chatRooms;
 export const selectCurrentChatRoom = state => state.chatRoom;
-export const selectRoomMessages = state => state.messages;
 export const selectNextMessages = state => state.nextMessages;
 
 export default chatSlice.reducer;

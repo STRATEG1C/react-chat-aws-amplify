@@ -3,47 +3,43 @@ type User
   id: ID!
   email: String!
   username: String!
-
   status: String
-  chatRoomUser: [ChatRoomUser] @connection(keyName: "byUser", fields: ["id"])
+  chatRoomUser: [UserConversation] @connection(keyName: "byUser", fields: ["id"])
 }
 
-type ChatRoomUser
+type UserConversation
 @model
-@key(name: "byUser", fields: ["userId", "chatRoomId"])
-@key(name: "byChatRoom", fields: ["chatRoomId", "userId"]) {
+@key(name: "byUser", fields: ["userID", "chatRoomID"])
+@key(name: "byChatRoom", fields: ["chatRoomID", "userID"]) {
   id: ID!
-  userId: ID!
-  chatRoomId: ID!
-  user: User @connection(fields: ["userId"])
-  chatRoom: ChatRoom @connection(fields: ["chatRoomId"])
+  userID: ID!
+  chatRoomID: ID!
+  user: User @connection(fields: ["userID"])
+  chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
 }
 
-type ChatRoom
-@model {
+type ChatRoom @model {
   id: ID!
-  chatRoomUsers: [ChatRoomUser] @connection(keyName: "byChatRoom", fields: ["id"])
-  messages: [Message] @connection(keyName: "byChatRoom", fields: ["id"])
+  initiatorID: ID!
+  subscriberID: ID!
+  initiator: User @connection(fields: ["initiatorID"])
+  subscriber: User @connection(fields: ["subscriberID"])
+  messages: [Message] @connection(keyName: "byChatRoom", fields: ["id"], limit: 20)
+  lastMessageID: ID
+  lastMessage: Message @connection(fields: ["lastMessageID"])
 }
 
 type Message
 @model
-@key(name: "byChatRoom", fields: ["chatRoomId", "createdAt"], queryField: "messagesByChatRoom") {
+@key(
+  name: "byChatRoom",
+  fields: ["chatRoomID", "createdAt"],
+  queryField: "messagesByChatRoom") {
   id: ID!
-  chatRoomId: ID!
-  userId: ID!
+  createdAt: String!
   content: String!
-  createdAt: AWSDateTime
-  updatedAt: AWSDateTime
-  user: User @connection(fields: ["userId"])
-  chatRoom: ChatRoom @connection(fields: ["chatRoomId"])
-}
-
-type Subscription {
-
-  onCreateChatRoomBySubscriberId(subscriberId: ID!): ChatRoom
-    @aws_subscribe(mutations: ["createChatRoom"])
-
-  onUpdateChatRoomById(id: ID!): ChatRoom
-    @aws_subscribe(mutations: ["updateChatRoom"])
+  userID: ID!
+  chatRoomID: ID!
+  user: User @connection(fields: ["userID"])
+  chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
 }

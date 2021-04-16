@@ -1,35 +1,55 @@
-export const getUser = /* GraphQL */ `
-  query GetUser($id: ID!) {
-    getUser(id: $id) {
-      id
-      email
-      username
-      status
-      chatRoomUser {
-        items {
+export const listUserConversations = /* GraphQL */ `
+  query ListUserConversations(
+    $filter: ModelUserConversationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserConversations(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        chatRoomID
+        user {
           id
-          userId
-          chatRoomId
+          email
+          username
+          status
           createdAt
           updatedAt
-          chatRoom {
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+          initiator {
             id
-            chatRoomUsers {
-              items {
-                user {
-                  id
-                  email
-                  username
-                  status
-                }
-              }
+            username
+          }
+          subscriber {
+            id
+            username
+          }
+          lastMessage {
+            id
+            content
+            createdAt
+            user {
+              id
+              username
             }
           }
         }
-        nextToken
+        createdAt
+        updatedAt
       }
-      createdAt
-      updatedAt
+      nextToken
     }
   }
 `;

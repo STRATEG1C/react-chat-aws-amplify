@@ -5,32 +5,40 @@ class ChatService {
     this._provider = provider;
   }
 
-  async create(data) {
-    return this._provider.create(data);
+  async createChatRoom(initiatorId, partnerId) {
+    return this._provider.createChatRoom(initiatorId, partnerId);
   }
 
-  async addUserToRoom(userId, chatRoomId) {
-    return this._provider.addUserToRoom(userId, chatRoomId);
+  async createUserConversation(userId, chatRoomId) {
+    return this._provider.createUserConversation(userId, chatRoomId);
   }
 
-  async getById(id) {
-    return this._provider.getById(id);
+  async getChatRoom(id) {
+    return this._provider.getChatRoom(id);
+  }
+
+  async getUserConversations(userId) {
+    return this._provider.getUserConversations(userId);
+  }
+
+  async getUserConversation(userId, chatId) {
+    return this._provider.getUserConversation(userId, chatId);
   }
 
   async getMessagesByChatId(chatId, limit, page) {
     return this._provider.getMessagesByChatId(chatId, limit, page);
   }
 
-  async getList(by, limit) {
-    return this._provider.getList(by, limit);
+  async getChatRoomList(by, limit) {
+    return this._provider.getChatRoomList(by, limit);
   }
 
-  async update(chatId, data) {
-    return this._provider.update(chatId, data);
+  async updateChatRoom(chatId, data) {
+    return this._provider.updateChatRoom(chatId, data);
   }
 
-  async createChatMessage(message) {
-    return this._provider.createChatMessage(message);
+  async createChatMessage(chatId, userId, message) {
+    return this._provider.createChatMessage(chatId, userId, message);
   }
 
   subscribeToRoom(id, callback) {

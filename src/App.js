@@ -39,36 +39,36 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (!currentUser || !currentUser.id) {
-      return;
-    }
-
-    subscriptionToCreateRooms.current = chatService.subscribeToCreationNewRoom(currentUser.id, onNewChat);
-
-    return () => {
-      subscriptionToCreateRooms.current.unsubscribe();
-    }
+    // if (!currentUser || !currentUser.id) {
+    //   return;
+    // }
+    //
+    // subscriptionToCreateRooms.current = chatService.subscribeToCreationNewRoom(currentUser.id, onNewChat);
+    //
+    // return () => {
+    //   subscriptionToCreateRooms.current.unsubscribe();
+    // }
   }, [currentUser, onNewChat]);
 
   useEffect(() => {
-    if (!chatRooms.length) {
-      return;
-    }
-
-    const subscriptions = subscriptionsToUpdateRooms.current;
-
-    subscriptions.forEach(subscription => subscription.unsubscribe());
-
-    chatRooms.forEach(chat => {
-      const subscription = chatService.subscribeToUpdateRoom(chat.id, (newRoom) => {
-        onUpdateChat(newRoom);
-      });
-      subscriptions.push(subscription);
-    })
-
-    return () => {
-      subscriptions.forEach(subscription => subscription.unsubscribe());
-    }
+    // if (!chatRooms.length) {
+    //   return;
+    // }
+    //
+    // const subscriptions = subscriptionsToUpdateRooms.current;
+    //
+    // subscriptions.forEach(subscription => subscription.unsubscribe());
+    //
+    // chatRooms.forEach(chat => {
+    //   const subscription = chatService.subscribeToUpdateRoom(chat.id, (newRoom) => {
+    //     onUpdateChat(newRoom);
+    //   });
+    //   subscriptions.push(subscription);
+    // })
+    //
+    // return () => {
+    //   subscriptions.forEach(subscription => subscription.unsubscribe());
+    // }
   }, [chatRooms, onUpdateChat])
 
   return (

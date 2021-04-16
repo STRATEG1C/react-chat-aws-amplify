@@ -22,43 +22,41 @@ const Feed = () => {
 
   const onUserClick = async (userId) => {
     try {
+      // 0. Check if user already has such conversation
       let chatRoom;
 
-      // 0 Check if room with this user already exists
-      // const filter = {
-      //   or: [
-      //     {
-      //       and: [
-      //         { initiatorId: { eq: userId } },
-      //         { subscriberId: { eq: currentUser.id } }
-      //       ]
-      //     },
-      //     {
-      //       and: [
-      //         { initiatorId: { eq: currentUser.id } },
-      //         { subscriberId: { eq: userId } }
-      //       ]
-      //     }
-      //   ]
-      // }
-      // const rooms = await chatService.getList(filter, 1);
+      const filter = {
+        or: [
+          {
+            and: [
+              { initiatorID: { eq: userId } },
+              { subscriberID: { eq: currentUser.id } }
+            ]
+          },
+          {
+            and: [
+              { initiatorID: { eq: currentUser.id } },
+              { subscriberID: { eq: userId } }
+            ]
+          }
+        ]
+      }
 
-      // TODO: Add checking
-      if (false) {
-        // chatRoom = rooms[0];
+      const rooms = await chatService.getChatRoomList(filter, 1);
+
+      if (rooms.length) {
+        chatRoom = rooms[0];
       } else {
         // 1. Create a new ChatRoom
-        chatRoom = await chatService.create({});
-
+        chatRoom = await chatService.createChatRoom(currentUser.id, userId);
         // 2. Add User to the ChatRoom
-        await chatService.addUserToRoom(userId, chatRoom.id);
-
+        await chatService.createUserConversation(userId, chatRoom.id);
         // 3. Add authenticated user to the ChatRoom
-        await chatService.addUserToRoom(currentUser.id, chatRoom.id);
+        await chatService.createUserConversation(currentUser.id, chatRoom.id);
       }
 
       // 4. Navigate user to the room
-      history.push(`/chat/${chatRoom.id}/HardcodedName`);
+      history.push(`/chat/${chatRoom.id}`);
     } catch(err) {
       console.log('Error while creating a new chat room', err);
     }
