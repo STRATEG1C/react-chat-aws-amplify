@@ -116,9 +116,6 @@ export const createUserConversation = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -175,9 +172,6 @@ export const updateUserConversation = /* GraphQL */ `
           status
           createdAt
           updatedAt
-        }
-        messages {
-          nextToken
         }
         lastMessageID
         lastMessage {
@@ -236,9 +230,6 @@ export const deleteUserConversation = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -286,17 +277,6 @@ export const createChatRoom = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
       }
       lastMessageID
       lastMessage {
@@ -359,17 +339,6 @@ export const updateChatRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
-      }
       lastMessageID
       lastMessage {
         id
@@ -430,17 +399,6 @@ export const deleteChatRoom = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
       }
       lastMessageID
       lastMessage {
@@ -514,9 +472,6 @@ export const createMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -575,9 +530,6 @@ export const updateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -635,9 +587,6 @@ export const deleteMessage = /* GraphQL */ `
           status
           createdAt
           updatedAt
-        }
-        messages {
-          nextToken
         }
         lastMessageID
         lastMessage {

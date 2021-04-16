@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { selectCurrentUser } from './store/Auth';
-import { addRoom, selectAllChats, updateRoom } from './store/Chat';
+import { selectAllChats, updateRoom } from './store/Chat';
+import { fetchChats } from './store/Chat/thunks';
 import ChatService from './services/ChatService';
 import ChatProvider from './providers/ChatProvider';
 import Routing from './routing';
@@ -11,65 +12,63 @@ import './App.css';
 const chatService = new ChatService(new ChatProvider());
 
 const App = () => {
+  const [chatRoomSubscriptions, setChatRoomSubscriptions] = useState([]);
+
   const dispatch = useDispatch();
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
   const chatRooms = useSelector(state => selectAllChats(state.chat));
-  let subscriptionToCreateRooms = useRef(null);
-  let subscriptionsToUpdateRooms = useRef([]);
 
   const onNewChat = useCallback((newRoom) => {
-    toast('Somebody new wrote to you!');
-    dispatch(addRoom(newRoom));
+    toast(`User ${newRoom.initiator.username} wants to start conversation with you!`);
+    dispatch(fetchChats(currentUser.id));
   }, [dispatch])
 
   const onUpdateChat = useCallback((updatedRoom) => {
-    if (updatedRoom.lastMessageAuthorId !== currentUser.id) {
-      const username = updatedRoom.lastMessageAuthorId === updatedRoom.initiatorId
-        ? updatedRoom.initiatorUsername
-        : updatedRoom.subscriberUsername;
+    const { lastMessage } = updatedRoom;
 
-      toast(`New message from ${username}: ${updatedRoom.lastMessage}`);
+    const url = window.location.href;
+    if (url.includes(updatedRoom.id)) {
+      return;
     }
 
-    dispatch(updateRoom(updatedRoom));
+    if (lastMessage.user.id !== currentUser.id) {
+      toast(`New message from ${lastMessage.user.username}: ${lastMessage.content}`)
+    }
+
+    dispatch(fetchChats(currentUser.id));
   }, [dispatch]);
 
   useEffect(() => {
+    if (!currentUser || !currentUser.id) {
+      return;
+    }
 
-  }, []);
+    const subscription = chatService.subscribeToCreateNewRoom(currentUser.id, onNewChat);
 
-  useEffect(() => {
-    // if (!currentUser || !currentUser.id) {
-    //   return;
-    // }
-    //
-    // subscriptionToCreateRooms.current = chatService.subscribeToCreationNewRoom(currentUser.id, onNewChat);
-    //
-    // return () => {
-    //   subscriptionToCreateRooms.current.unsubscribe();
-    // }
+    return () => subscription.unsubscribe();
   }, [currentUser, onNewChat]);
 
+  const unsubscribeFromRoomUpdates = () => {
+    chatRoomSubscriptions.forEach(item => item.unsubscribe());
+    setChatRoomSubscriptions([]);
+  }
+
+  const subscribeToRoomUpdates = () => {
+    unsubscribeFromRoomUpdates();
+    setChatRoomSubscriptions(chatRooms.map(item => {
+      return chatService.subscribeToUpdateRoom(item.id, onUpdateChat);
+    }));
+  }
+
   useEffect(() => {
-    // if (!chatRooms.length) {
-    //   return;
-    // }
-    //
-    // const subscriptions = subscriptionsToUpdateRooms.current;
-    //
-    // subscriptions.forEach(subscription => subscription.unsubscribe());
-    //
-    // chatRooms.forEach(chat => {
-    //   const subscription = chatService.subscribeToUpdateRoom(chat.id, (newRoom) => {
-    //     onUpdateChat(newRoom);
-    //   });
-    //   subscriptions.push(subscription);
-    // })
-    //
-    // return () => {
-    //   subscriptions.forEach(subscription => subscription.unsubscribe());
-    // }
-  }, [chatRooms, onUpdateChat])
+    if (!chatRooms.length) {
+      return;
+    }
+
+    subscribeToRoomUpdates();
+
+    return () => unsubscribeFromRoomUpdates();
+  }, [chatRooms, chatRooms.length]);
 
   return (
     <div className="app">

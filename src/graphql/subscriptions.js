@@ -1,6 +1,177 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onNewMessageInChat = /* GraphQL */ `
+  subscription OnNewMessageInChat($chatRoomID: ID!) {
+    onNewMessageInChat(chatRoomID: $chatRoomID) {
+      id
+      createdAt
+      content
+      userID
+      chatRoomID
+      user {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      chatRoom {
+        id
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      updatedAt
+    }
+  }
+`;
+export const onUpdateChatRoomById = /* GraphQL */ `
+  subscription OnUpdateChatRoomById($id: ID!) {
+    onUpdateChatRoomById(id: $id) {
+      id
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
+  subscription OnCreateChatRoomBySubscriberId($subscriberID: ID!) {
+    onCreateChatRoomBySubscriberId(subscriberID: $subscriberID) {
+      id
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
@@ -104,9 +275,6 @@ export const onCreateUserConversation = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -160,9 +328,6 @@ export const onUpdateUserConversation = /* GraphQL */ `
           status
           createdAt
           updatedAt
-        }
-        messages {
-          nextToken
         }
         lastMessageID
         lastMessage {
@@ -218,9 +383,6 @@ export const onDeleteUserConversation = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -265,17 +427,6 @@ export const onCreateChatRoom = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
       }
       lastMessageID
       lastMessage {
@@ -335,17 +486,6 @@ export const onUpdateChatRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
-      }
       lastMessageID
       lastMessage {
         id
@@ -403,17 +543,6 @@ export const onDeleteChatRoom = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
       }
       lastMessageID
       lastMessage {
@@ -484,9 +613,6 @@ export const onCreateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -542,9 +668,6 @@ export const onUpdateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -599,9 +722,6 @@ export const onDeleteMessage = /* GraphQL */ `
           status
           createdAt
           updatedAt
-        }
-        messages {
-          nextToken
         }
         lastMessageID
         lastMessage {

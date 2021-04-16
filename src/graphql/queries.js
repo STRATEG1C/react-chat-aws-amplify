@@ -82,9 +82,6 @@ export const getUserConversation = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -168,17 +165,6 @@ export const getChatRoom = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
-      }
       lastMessageID
       lastMessage {
         id
@@ -236,9 +222,6 @@ export const listChatRooms = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        messages {
-          nextToken
-        }
         lastMessageID
         lastMessage {
           id
@@ -293,9 +276,6 @@ export const getMessage = /* GraphQL */ `
           status
           createdAt
           updatedAt
-        }
-        messages {
-          nextToken
         }
         lastMessageID
         lastMessage {

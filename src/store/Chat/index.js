@@ -18,11 +18,11 @@ export const chatSlice = createSlice({
       state.chatRooms = [action.payload, ...state.chatRooms];
     },
     updateRoom: (state, action) => {
-      const targetRoom = state.chatRooms.find(item => item.id === action.payload.id);
-      Object.keys(action.payload).forEach(key => targetRoom[key] = action.payload[key]);
+      const updatedChatRoom = state.chatRooms.find(item => item.id === action.payload.id);
+      updatedChatRoom.lastMessageID = action.payload.lastMessageID
     },
-    setMessages: (state, action) => {
-      state.messages = action.payload;
+    addMessage: (state, action) => {
+      state.messages = [action.payload, ...state.messages];
     },
   },
   extraReducers: {
@@ -55,10 +55,11 @@ export const chatSlice = createSlice({
     [fetchMessages.pending]: (state, action) => {
       state.isError = false;
       state.isLoading = true;
+      state.messages = [];
     },
     [fetchMessages.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.messages = [...state.messages, ...action.payload.items];
+      state.messages = action.payload.items;
       state.nextMessages = action.payload.nextToken;
     },
     [fetchMessages.rejected]: (state, action) => {
@@ -68,10 +69,11 @@ export const chatSlice = createSlice({
   }
 });
 
-export const { addRoom, updateRoom, setMessages } = chatSlice.actions;
+export const { addRoom, updateRoom, addMessage } = chatSlice.actions;
 
 export const selectAllChats = state => state.chatRooms;
-export const selectCurrentChatRoom = state => state.chatRoom;
+export const selectChatRoom = state => state.chatRoom;
+export const selectMessages = state => state.messages;
 export const selectNextMessages = state => state.nextMessages;
 
 export default chatSlice.reducer;

@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { selectCurrentChatRoom, selectNextMessages, setMessages } from '../../../store/Chat';
+import {
+  addMessage,
+  selectChatRoom,
+  selectMessages,
+  selectNextMessages,
+} from '../../../store/Chat';
 import { fetchChatRoom, fetchMessages } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatService from '../../../services/ChatService';
@@ -18,7 +23,8 @@ const MESSAGES_PER_PAGE = 20;
 const ChatRoom = ({ match }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const chatRoomData = useSelector(state => selectCurrentChatRoom(state.chat));
+  const chatRoomData = useSelector(state => selectChatRoom(state.chat));
+  const chatRoomMessages = useSelector(state => selectMessages(state.chat));
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
@@ -31,7 +37,23 @@ const ChatRoom = ({ match }) => {
     }
 
     dispatch(fetchChatRoom(chatId));
+    dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE }));
   }, []);
+
+  const onReceiveNewMessage = (message) => {
+    dispatch(addMessage(message));
+  }
+
+  useEffect(async () => {
+    if (!chatRoomData) {
+      return;
+    }
+
+    const { chatId } = match.params;
+    const subscription = chatService.subscribeToChatRoom(chatId, onReceiveNewMessage);
+
+    return () => subscription.unsubscribe();
+  }, [chatRoomData])
 
   const onAddMessage = async (message) => {
     try {
@@ -66,7 +88,7 @@ const ChatRoom = ({ match }) => {
         onLoadMore={onLoadMoreMessages}
       >
         <MessageList
-          messages={chatRoomData.messages.items}
+          messages={chatRoomMessages}
           ownUserId={currentUser.id}
         />
       </LazyLoad>

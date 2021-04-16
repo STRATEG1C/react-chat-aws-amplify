@@ -24,7 +24,6 @@ type ChatRoom @model {
   subscriberID: ID!
   initiator: User @connection(fields: ["initiatorID"])
   subscriber: User @connection(fields: ["subscriberID"])
-  messages: [Message] @connection(keyName: "byChatRoom", fields: ["id"], limit: 20)
   lastMessageID: ID
   lastMessage: Message @connection(fields: ["lastMessageID"])
 }
@@ -42,4 +41,15 @@ type Message
   chatRoomID: ID!
   user: User @connection(fields: ["userID"])
   chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+}
+
+type Subscription {
+  onNewMessageInChat(chatRoomID: ID!): Message
+  @aws_subscribe(mutations: ["createMessage"])
+
+  onUpdateChatRoomById(id: ID!): ChatRoom
+  @aws_subscribe(mutations: ["updateChatRoom"])
+
+  onCreateChatRoomBySubscriberId(subscriberID: ID!): ChatRoom
+  @aws_subscribe(mutations: ["createChatRoom"])
 }
