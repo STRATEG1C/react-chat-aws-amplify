@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { selectCurrentUser } from './store/Auth';
-import { selectAllChats, updateRoom } from './store/Chat';
+import { selectAllChats } from './store/Chat';
 import { fetchChats } from './store/Chat/thunks';
 import ChatService from './services/ChatService';
 import ChatProvider from './providers/ChatProvider';

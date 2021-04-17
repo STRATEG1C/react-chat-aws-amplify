@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { v4 as uuid } from 'uuid';
 import { useHistory } from 'react-router-dom';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
@@ -8,13 +7,9 @@ import { selectCurrentUser } from '../../../store/Auth';
 import PageWrapper from '../../common/PageWrapper';
 import UsersList from '../../common/UsersList';
 import ChatList from '../../common/ChatList';
-
 import './style.css';
-import UserService from '../../../services/UserService';
-import UserProvider from '../../../providers/UserProvider';
 
 const chatService = new ChatService(new ChatProvider());
-const userService = new UserService(new UserProvider());
 
 const Feed = () => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
