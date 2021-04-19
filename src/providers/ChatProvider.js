@@ -1,6 +1,12 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { getChatRoom, listChatRooms, messagesByChatRoom } from '../graphql/queries';
-import { createChatRoom, createMessage, createUserConversation, updateChatRoom } from '../graphql/mutations';
+import {
+  createChatRoom,
+  createMessage,
+  createUserConversation,
+  updateChatRoom,
+  updateUserConversation
+} from '../graphql/mutations';
 import { listUserConversations } from '../components/common/ChatList/queries';
 import {
   onCreateChatRoomBySubscriberId,
@@ -19,14 +25,26 @@ class ChatProvider {
     return res.data.createChatRoom;
   }
 
-  async createUserConversation(userID, chatRoomID) {
+  async createUserConversation(userID, chatRoomID, isAccepted) {
     const res = await API.graphql(graphqlOperation(createUserConversation, {
       input: {
         userID,
-        chatRoomID
+        chatRoomID,
+        isWaitForAccept: !isAccepted,
+        isAccepted: isAccepted,
       }
     }));
     return res.data.createUserConversation;
+  }
+
+  async updateConversation(id, data) {
+    const res = await API.graphql(graphqlOperation(updateUserConversation, {
+      input: {
+        id,
+        ...data
+      }
+    }));
+    return res.data.updateUserConversation;
   }
 
   async getChatRoom(id) {
@@ -37,9 +55,27 @@ class ChatProvider {
   async getUserConversations(userID) {
     const res = await API.graphql(graphqlOperation(listUserConversations, {
       filter: {
-        userID: {
-          eq: userID
-        }
+        and: [
+          {
+            userID: {
+              eq: userID
+            }
+          },
+          {
+            or: [
+              {
+                isAccepted: {
+                  eq: true
+                },
+              },
+              {
+                isWaitForAccept: {
+                  eq: true
+                }
+              }
+            ]
+          },
+        ]
       }
     }));
     return res.data.listUserConversations.items;

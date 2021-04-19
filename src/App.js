@@ -19,7 +19,9 @@ const App = () => {
 
   const onNewChat = useCallback((newRoom) => {
     toast(`User ${newRoom.initiator.username} wants to start conversation with you!`);
-    dispatch(fetchChats(currentUser.id));
+    setTimeout(() => {
+      dispatch(fetchChats(currentUser.id));
+    }, 500);
   }, [dispatch])
 
   const onUpdateChat = useCallback((updatedRoom) => {
@@ -29,8 +31,6 @@ const App = () => {
     if (url.includes(updatedRoom.id)) {
       return;
     }
-
-    console.log(lastMessage, currentUser);
 
     if (lastMessage.user.id !== currentUser.id) {
       toast(`New message from ${lastMessage.user.username}: ${lastMessage.content}`)
@@ -44,7 +44,6 @@ const App = () => {
       return;
     }
 
-    chatRoomSubscriptions.forEach(item => item.unsubscribe());
     const subscription = chatService.subscribeToCreateNewRoom(currentUser.id, onNewChat);
 
     return () => subscription.unsubscribe();

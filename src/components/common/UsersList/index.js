@@ -12,12 +12,17 @@ const UsersList = ({ onUserClick, currentUser }) => {
   }, [dispatch]);
 
   return (
-    <div className="users-list">
+    <div className="users-list chat-list">
       <h2 className="users-list__heading">Users list</h2>
       <div className="users-list__list">
         {userList.map(item => (
-          <div className="user-card" key={item.id} onClick={() => item.id !== currentUser && onUserClick(item.id)}>
-            <p className="user-card__nickname">{item.username}</p>
+          <div className="user-card chat-card" key={item.id} onClick={() => item.id !== currentUser && onUserClick(item.id)}>
+            <div className="chat-card__avatar" />
+            <div className="chat-card__info">
+              <div className="chat-card__title">
+                {item.username}
+              </div>
+            </div>
           </div>
         ))}
       </div>

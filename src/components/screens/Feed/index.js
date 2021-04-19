@@ -50,13 +50,13 @@ const Feed = ({ match }) => {
         // 1. Create a new ChatRoom
         chatRoom = await chatService.createChatRoom(currentUser.id, userId);
         // 2. Add User to the ChatRoom
-        await chatService.createUserConversation(userId, chatRoom.id);
+        await chatService.createUserConversation(userId, chatRoom.id, false);
         // 3. Add authenticated user to the ChatRoom
-        await chatService.createUserConversation(currentUser.id, chatRoom.id);
+        await chatService.createUserConversation(currentUser.id, chatRoom.id, true);
       }
 
       // 4. Navigate user to the room
-      history.push(`/chat/${chatRoom.id}`);
+      history.push(`/${chatRoom.id}`);
     } catch(err) {
       console.log('Error while creating a new chat room', err);
     }
@@ -67,13 +67,13 @@ const Feed = ({ match }) => {
   return (
     <PageWrapper title="Feed">
       <div className="flex">
-        {/*<UsersList onUserClick={onUserClick} currentUser={currentUser.id} />*/}
         <ChatList
           onItemClick={onClickChat}
           className="feed__chat-list"
         />
         {chatId ? <ChatRoom id={chatId} /> : null}
       </div>
+      <UsersList onUserClick={onUserClick} currentUser={currentUser.id} />
     </PageWrapper>
   );
 }

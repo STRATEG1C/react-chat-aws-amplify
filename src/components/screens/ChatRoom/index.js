@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import {
@@ -11,17 +11,19 @@ import { fetchChatRoom, fetchMessages } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
-import PageWrapper from '../../common/PageWrapper';
 import AddMessageBlock from './AddMessageForm';
 import LazyLoad from '../../common/LazyLoad';
 import MessageList from './MessageList';
 import './style.scss';
+import AcceptChatBlock from './AcceptChatBlock';
 
 const chatService = new ChatService(new ChatProvider());
 
 const MESSAGES_PER_PAGE = 20;
 
 const ChatRoom = ({ id }) => {
+  const [userConversation, setUserConversation] = useState(null);
+
   const dispatch = useDispatch();
   const history = useHistory();
   const chatRoomData = useSelector(state => selectChatRoom(state.chat));
@@ -35,6 +37,8 @@ const ChatRoom = ({ id }) => {
     if (!userConversation) {
       history.push('/');
     }
+
+    setUserConversation(userConversation);
 
     dispatch(fetchChatRoom(id));
     dispatch(fetchMessages({
@@ -57,6 +61,19 @@ const ChatRoom = ({ id }) => {
     return () => subscription.unsubscribe();
   }, [chatRoomData])
 
+  const onAcceptConversation = async (state) => {
+    const updatedConversation = await chatService.updateConversation(userConversation.id, {
+      isWaitForAccept: false,
+      isAccepted: state
+    });
+
+    if (!state) {
+      return history.push('/');
+    }
+
+    setUserConversation(updatedConversation);
+  }
+
   const onAddMessage = async (message) => {
     try {
       const newMessage = await chatService.createChatMessage(id, currentUser.id, message);
@@ -74,7 +91,7 @@ const ChatRoom = ({ id }) => {
     }
   }
 
-  if (!chatRoomData) {
+  if (!userConversation || !chatRoomData) {
     return (
       <div>Loading...</div>
     )
@@ -83,7 +100,7 @@ const ChatRoom = ({ id }) => {
   return (
     <div className="chat-room-wrapper">
       <Link to="/" className="back">{`<- Close`}</Link>
-      <AddMessageBlock onAdd={onAddMessage} />
+      {userConversation.isWaitForAccept ? <AcceptChatBlock onAccept={onAcceptConversation} /> : <AddMessageBlock onAdd={onAddMessage} />}
       <LazyLoad
         onLoadMore={onLoadMoreMessages}
       >

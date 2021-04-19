@@ -16,13 +16,14 @@ const ChatList = ({ onItemClick, className }) => {
 
   return (
     <div className={`chat-list ${className}`}>
-      {chatList.map((item, i) => (
+      <h2>Chat List</h2>
+      {chatList.map((item) => (
         <ChatListItem
           room={item.chatRoom}
           ownUserId={currentUser.id}
-          // key={item.chatRoom.id}
+          isAccepted={item.isWaitForAccept}
+          key={item.chatRoom.id}
           onClick={onItemClick}
-          key={i}
         />
       ))}
     </div>

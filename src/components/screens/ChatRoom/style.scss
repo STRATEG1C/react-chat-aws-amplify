@@ -10,6 +10,7 @@
 }
 
 .message-list {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -33,4 +34,8 @@
   &__text {
     font-weight: 300;
   }
+}
+
+.accept-chat {
+
 }

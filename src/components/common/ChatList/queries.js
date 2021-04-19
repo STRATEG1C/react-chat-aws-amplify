@@ -13,6 +13,8 @@ export const listUserConversations = /* GraphQL */ `
         id
         userID
         chatRoomID
+        isWaitForAccept
+        isAccepted
         user {
           id
           email

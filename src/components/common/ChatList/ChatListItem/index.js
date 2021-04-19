@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './style.scss';
 
-const ChatListItem = ({ room, ownUserId, onClick }) => {
+const ChatListItem = ({ room, ownUserId, isAccepted, onClick }) => {
   const onClickHandler = () => {
     onClick(room.id);
   }
@@ -16,7 +15,10 @@ const ChatListItem = ({ room, ownUserId, onClick }) => {
       <div className="chat-card">
         <div className="chat-card__avatar" />
         <div className="chat-card__info">
-          <div className="chat-card__title">{partnerUser.username}</div>
+          <div className="chat-card__title">
+            {partnerUser.username}&nbsp;
+            {isAccepted ? '(NEW! Wait for accept)' : ''}
+          </div>
           {room.lastMessage ? (
             <div className="chat-card__last-message chat-last-message">
               <span className="chat-last-message__from">{`${room.lastMessage.user.username}: `}</span>

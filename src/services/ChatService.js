@@ -9,8 +9,8 @@ class ChatService {
     return this._provider.createChatRoom(initiatorId, partnerId);
   }
 
-  async createUserConversation(userId, chatRoomId) {
-    return this._provider.createUserConversation(userId, chatRoomId);
+  async createUserConversation(userId, chatRoomId, isAccepted) {
+    return this._provider.createUserConversation(userId, chatRoomId, isAccepted);
   }
 
   async getChatRoom(id) {
@@ -23,6 +23,10 @@ class ChatService {
 
   async getUserConversation(userId, chatId) {
     return this._provider.getUserConversation(userId, chatId);
+  }
+
+  async updateConversation(id, data) {
+    return this._provider.updateConversation(id, data);
   }
 
   async getMessagesByChatId(chatId, limit, page) {

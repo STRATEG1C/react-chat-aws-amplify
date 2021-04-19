@@ -172,6 +172,176 @@ export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
     }
   }
 `;
+export const onUpdateChatRoomBySubscriberId = /* GraphQL */ `
+  subscription OnUpdateChatRoomBySubscriberId($subscriberID: ID!) {
+    onUpdateChatRoomBySubscriberId(subscriberID: $subscriberID) {
+      id
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUserConversationByUserId = /* GraphQL */ `
+  subscription OnCreateUserConversationByUserId($userID: ID!) {
+    onCreateUserConversationByUserId(userID: $userID) {
+      id
+      userID
+      chatRoomID
+      user {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      chatRoom {
+        id
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      isWaitForAccept
+      isAccepted
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUserConversationByUserId = /* GraphQL */ `
+  subscription OnUpdateUserConversationByUserId($userID: ID!) {
+    onUpdateUserConversationByUserId(userID: $userID) {
+      id
+      userID
+      chatRoomID
+      user {
+        id
+        email
+        username
+        status
+        chatRoomUser {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      chatRoom {
+        id
+        initiatorID
+        subscriberID
+        initiator {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        subscriber {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        lastMessageID
+        lastMessage {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      isWaitForAccept
+      isAccepted
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
