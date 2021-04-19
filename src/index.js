@@ -8,7 +8,7 @@ import store from './store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css';
-import './index.css';
+import './assets/styles/index.scss';
 
 Amplify.configure(awsmobile);
 

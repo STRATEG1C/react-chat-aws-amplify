@@ -8,12 +8,17 @@ import PageWrapper from '../../common/PageWrapper';
 import UsersList from '../../common/UsersList';
 import ChatList from '../../common/ChatList';
 import './style.css';
+import ChatRoom from '../ChatRoom';
 
 const chatService = new ChatService(new ChatProvider());
 
-const Feed = () => {
+const Feed = ({ match }) => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
   const history = useHistory();
+
+  const onClickChat = (chatId) => {
+    history.push(`/${chatId}`);
+  }
 
   const onUserClick = async (userId) => {
     try {
@@ -57,13 +62,18 @@ const Feed = () => {
     }
   };
 
+  const chatId = match?.params?.chatId;
 
   return (
     <PageWrapper title="Feed">
-      <UsersList onUserClick={onUserClick} currentUser={currentUser.id} />
-      <br />
-      <br />
-      <ChatList />
+      <div className="flex">
+        {/*<UsersList onUserClick={onUserClick} currentUser={currentUser.id} />*/}
+        <ChatList
+          onItemClick={onClickChat}
+          className="feed__chat-list"
+        />
+        {chatId ? <ChatRoom id={chatId} /> : null}
+      </div>
     </PageWrapper>
   );
 }

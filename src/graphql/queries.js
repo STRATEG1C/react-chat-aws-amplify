@@ -13,6 +13,8 @@ export const getUser = /* GraphQL */ `
           id
           userID
           chatRoomID
+          isWaitForAccept
+          isAccepted
           createdAt
           updatedAt
         }
@@ -94,6 +96,8 @@ export const getUserConversation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      isWaitForAccept
+      isAccepted
       createdAt
       updatedAt
     }
@@ -130,6 +134,8 @@ export const listUserConversations = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        isWaitForAccept
+        isAccepted
         createdAt
         updatedAt
       }

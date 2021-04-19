@@ -16,3 +16,8 @@
 .user-card:last-child {
     border-bottom: none;
 }
+
+.feed__chat-list {
+    width: 300px;
+    border-right: 1px solid black;
+}

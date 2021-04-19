@@ -15,12 +15,13 @@ import PageWrapper from '../../common/PageWrapper';
 import AddMessageBlock from './AddMessageForm';
 import LazyLoad from '../../common/LazyLoad';
 import MessageList from './MessageList';
+import './style.scss';
 
 const chatService = new ChatService(new ChatProvider());
 
 const MESSAGES_PER_PAGE = 20;
 
-const ChatRoom = ({ match }) => {
+const ChatRoom = ({ id }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const chatRoomData = useSelector(state => selectChatRoom(state.chat));
@@ -29,15 +30,17 @@ const ChatRoom = ({ match }) => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
   useEffect(async () => {
-    const { chatId } = match.params;
-    const userConversation = await chatService.getUserConversation(currentUser.id, chatId);
+    const userConversation = await chatService.getUserConversation(currentUser.id, id);
 
     if (!userConversation) {
       history.push('/');
     }
 
-    dispatch(fetchChatRoom(chatId));
-    dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE }));
+    dispatch(fetchChatRoom(id));
+    dispatch(fetchMessages({
+      chatId: id,
+      limit: MESSAGES_PER_PAGE
+    }));
   }, []);
 
   const onReceiveNewMessage = (message) => {
@@ -49,17 +52,15 @@ const ChatRoom = ({ match }) => {
       return;
     }
 
-    const { chatId } = match.params;
-    const subscription = chatService.subscribeToChatRoom(chatId, onReceiveNewMessage);
+    const subscription = chatService.subscribeToChatRoom(id, onReceiveNewMessage);
 
     return () => subscription.unsubscribe();
   }, [chatRoomData])
 
   const onAddMessage = async (message) => {
     try {
-      const { chatId } = match.params;
-      const newMessage = await chatService.createChatMessage(chatId, currentUser.id, message);
-      await chatService.updateChatRoom(chatId, {
+      const newMessage = await chatService.createChatMessage(id, currentUser.id, message);
+      await chatService.updateChatRoom(id, {
         lastMessageID: newMessage.id
       });
     } catch (err) {
@@ -68,9 +69,8 @@ const ChatRoom = ({ match }) => {
   }
 
   const onLoadMoreMessages = () => {
-    const { chatId } = match.params;
     if (nextChatMessages) {
-      dispatch(fetchMessages({ chatId, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
+      dispatch(fetchMessages({ id, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
     }
   }
 
@@ -81,8 +81,8 @@ const ChatRoom = ({ match }) => {
   }
 
   return (
-    <PageWrapper title={`Chat with user`}>
-      <Link to="/">To feed</Link>
+    <div className="chat-room-wrapper">
+      <Link to="/" className="back">{`<- Close`}</Link>
       <AddMessageBlock onAdd={onAddMessage} />
       <LazyLoad
         onLoadMore={onLoadMoreMessages}
@@ -93,7 +93,7 @@ const ChatRoom = ({ match }) => {
         />
       </LazyLoad>
       <hr/>
-    </PageWrapper>
+    </div>
   );
 };
 

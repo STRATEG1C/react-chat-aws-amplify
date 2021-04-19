@@ -12,7 +12,7 @@ const AddMessageBlock = ({ onAdd }) => {
 
   return (
     <div className="add-message">
-      <p>Input message</p>
+      <p>Type message:</p>
       <textarea
         cols={60}
         rows={3}

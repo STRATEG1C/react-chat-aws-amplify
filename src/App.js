@@ -7,7 +7,6 @@ import { fetchChats } from './store/Chat/thunks';
 import ChatService from './services/ChatService';
 import ChatProvider from './providers/ChatProvider';
 import Routing from './routing';
-import './App.css';
 
 const chatService = new ChatService(new ChatProvider());
 
@@ -31,6 +30,8 @@ const App = () => {
       return;
     }
 
+    console.log(lastMessage, currentUser);
+
     if (lastMessage.user.id !== currentUser.id) {
       toast(`New message from ${lastMessage.user.username}: ${lastMessage.content}`)
     }
@@ -43,6 +44,7 @@ const App = () => {
       return;
     }
 
+    chatRoomSubscriptions.forEach(item => item.unsubscribe());
     const subscription = chatService.subscribeToCreateNewRoom(currentUser.id, onNewChat);
 
     return () => subscription.unsubscribe();

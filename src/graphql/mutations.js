@@ -16,6 +16,8 @@ export const createUser = /* GraphQL */ `
           id
           userID
           chatRoomID
+          isWaitForAccept
+          isAccepted
           createdAt
           updatedAt
         }
@@ -41,6 +43,8 @@ export const updateUser = /* GraphQL */ `
           id
           userID
           chatRoomID
+          isWaitForAccept
+          isAccepted
           createdAt
           updatedAt
         }
@@ -66,6 +70,8 @@ export const deleteUser = /* GraphQL */ `
           id
           userID
           chatRoomID
+          isWaitForAccept
+          isAccepted
           createdAt
           updatedAt
         }
@@ -128,6 +134,8 @@ export const createUserConversation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      isWaitForAccept
+      isAccepted
       createdAt
       updatedAt
     }
@@ -185,6 +193,8 @@ export const updateUserConversation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      isWaitForAccept
+      isAccepted
       createdAt
       updatedAt
     }
@@ -242,6 +252,8 @@ export const deleteUserConversation = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      isWaitForAccept
+      isAccepted
       createdAt
       updatedAt
     }

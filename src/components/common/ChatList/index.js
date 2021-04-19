@@ -5,7 +5,7 @@ import { fetchChats } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatListItem from './ChatListItem';
 
-const ChatList = () => {
+const ChatList = ({ onItemClick, className }) => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
   const chatList = useSelector(state => selectAllChats(state.chat));
   const dispatch = useDispatch();
@@ -15,17 +15,16 @@ const ChatList = () => {
   }, [currentUser.id, dispatch]);
 
   return (
-    <div className="users-list">
-      <h2 className="users-list__heading">Chats list</h2>
-      <div className="users-list__list">
-        {chatList.map(item => (
-          <ChatListItem
-            room={item.chatRoom}
-            ownUserId={currentUser.id}
-            key={item.chatRoom.id}
-          />
-        ))}
-      </div>
+    <div className={`chat-list ${className}`}>
+      {chatList.map((item, i) => (
+        <ChatListItem
+          room={item.chatRoom}
+          ownUserId={currentUser.id}
+          // key={item.chatRoom.id}
+          onClick={onItemClick}
+          key={i}
+        />
+      ))}
     </div>
   )
 };

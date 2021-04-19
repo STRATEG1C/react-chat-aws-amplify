@@ -16,6 +16,8 @@ type UserConversation
   chatRoomID: ID!
   user: User @connection(fields: ["userID"])
   chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+  isWaitForAccept: Boolean!
+  isAccepted: Boolean!
 }
 
 type ChatRoom @model {
