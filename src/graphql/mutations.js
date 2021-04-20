@@ -11,7 +11,7 @@ export const createUser = /* GraphQL */ `
       email
       username
       status
-      chatRoomUser {
+      conversations {
         items {
           id
           userID
@@ -38,7 +38,7 @@ export const updateUser = /* GraphQL */ `
       email
       username
       status
-      chatRoomUser {
+      conversations {
         items {
           id
           userID
@@ -65,7 +65,7 @@ export const deleteUser = /* GraphQL */ `
       email
       username
       status
-      chatRoomUser {
+      conversations {
         items {
           id
           userID
@@ -96,7 +96,7 @@ export const createUserConversation = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -155,7 +155,7 @@ export const updateUserConversation = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -214,7 +214,7 @@ export const deleteUserConversation = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -273,7 +273,7 @@ export const createChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -284,7 +284,7 @@ export const createChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -334,7 +334,7 @@ export const updateChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -345,7 +345,7 @@ export const updateChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -395,7 +395,7 @@ export const deleteChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -406,7 +406,7 @@ export const deleteChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -458,7 +458,7 @@ export const createMessage = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -516,7 +516,7 @@ export const updateMessage = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -574,7 +574,7 @@ export const deleteMessage = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt

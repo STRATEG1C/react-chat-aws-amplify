@@ -14,8 +14,8 @@ import ChatProvider from '../../../providers/ChatProvider';
 import AddMessageBlock from './AddMessageForm';
 import LazyLoad from '../../common/LazyLoad';
 import MessageList from './MessageList';
-import './style.scss';
 import AcceptChatBlock from './AcceptChatBlock';
+import './style.scss';
 
 const chatService = new ChatService(new ChatProvider());
 
@@ -87,7 +87,7 @@ const ChatRoom = ({ id }) => {
 
   const onLoadMoreMessages = () => {
     if (nextChatMessages) {
-      dispatch(fetchMessages({ id, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
+      dispatch(fetchMessages({ chatId: id, limit: MESSAGES_PER_PAGE, next: nextChatMessages }));
     }
   }
 
@@ -103,6 +103,7 @@ const ChatRoom = ({ id }) => {
       {userConversation.isWaitForAccept ? <AcceptChatBlock onAccept={onAcceptConversation} /> : <AddMessageBlock onAdd={onAddMessage} />}
       <LazyLoad
         onLoadMore={onLoadMoreMessages}
+        className="message-scrollable-list "
       >
         <MessageList
           messages={chatRoomMessages}

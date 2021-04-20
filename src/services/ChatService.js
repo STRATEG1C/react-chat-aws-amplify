@@ -49,12 +49,16 @@ class ChatService {
     return this._provider.subscribeToChatRoom(id, callback);
   }
 
-  subscribeToCreateNewRoom(userId, callback) {
-    return this._provider.subscribeToCreateNewRoom(userId, callback);
+  subscribeToCreateNewConversation(userId, callback) {
+    return this._provider.subscribeToCreateNewConversation(userId, callback);
   }
 
   subscribeToUpdateRoom(id, callback) {
     return this._provider.subscribeToUpdateRoom(id, callback);
+  }
+
+  subscribeToUpdateOwnConversation(userId, callback) {
+    return this._provider.subscribeToUpdateOwnConversation(userId, callback);
   }
 }
 

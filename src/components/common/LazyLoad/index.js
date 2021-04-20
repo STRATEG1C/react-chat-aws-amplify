@@ -25,7 +25,7 @@ const LazyLoad = ({
         onLoadMore();
       }
     }
-  }, 200);
+  }, 600);
 
   return (
     <div

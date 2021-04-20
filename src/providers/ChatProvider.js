@@ -9,9 +9,10 @@ import {
 } from '../graphql/mutations';
 import { listUserConversations } from '../components/common/ChatList/queries';
 import {
-  onCreateChatRoomBySubscriberId,
+  onCreateUserConversationByUserId,
   onNewMessageInChat,
-  onUpdateChatRoom
+  onUpdateChatRoom,
+  onUpdateUserConversationByUserId
 } from '../graphql/subscriptions';
 
 class ChatProvider {
@@ -148,17 +149,17 @@ class ChatProvider {
     });
   }
 
-  subscribeToCreateNewRoom(userId, callback) {
+  subscribeToCreateNewConversation(userID, callback) {
     const subscription = API.graphql(
       {
-        query: onCreateChatRoomBySubscriberId,
+        query: onCreateUserConversationByUserId,
         variables: {
-          subscriberID: userId
+          userID
         }
       }
     ).subscribe({
       next({ value }) {
-        const newRoom = value.data.onCreateChatRoomBySubscriberId;
+        const newRoom = value.data.onCreateUserConversationByUserId;
         callback(newRoom);
       }
     });
@@ -167,7 +168,7 @@ class ChatProvider {
   }
 
   subscribeToUpdateRoom(id, callback) {
-    const subscription = API.graphql(
+    return API.graphql(
       {
         query: onUpdateChatRoom,
         variables: {
@@ -180,8 +181,22 @@ class ChatProvider {
         callback(updatedRoom);
       }
     });
+  }
 
-    return subscription;
+  subscribeToUpdateOwnConversation(userID, callback) {
+    return API.graphql(
+      {
+        query: onUpdateUserConversationByUserId,
+        variables: {
+          userID
+        }
+      }
+    ).subscribe({
+      next({ value }) {
+        const updatedRoom = value.data.onUpdateUserConversationByUserId;
+        callback(updatedRoom);
+      }
+    });
   }
 }
 

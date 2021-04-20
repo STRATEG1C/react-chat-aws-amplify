@@ -9,6 +9,12 @@
   cursor: pointer;
 }
 
+.message-scrollable-list {
+  max-height: 550px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
 .message-list {
   margin-top: 20px;
   display: flex;
