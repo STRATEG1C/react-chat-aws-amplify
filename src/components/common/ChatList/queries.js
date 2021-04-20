@@ -15,6 +15,7 @@ export const listUserConversations = /* GraphQL */ `
         chatRoomID
         isWaitForAccept
         isAccepted
+        lastSeenTime
         user {
           id
           email
@@ -45,6 +46,11 @@ export const listUserConversations = /* GraphQL */ `
             user {
               id
               username
+            }
+          }
+          messages {
+            items {
+              createdAt
             }
           }
         }

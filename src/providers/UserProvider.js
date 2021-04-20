@@ -1,5 +1,5 @@
 import { API, graphqlOperation } from 'aws-amplify';
-import { getUser, listUsers } from '../graphql/queries';
+import { getUser, listUsers, searchUsers } from '../graphql/queries';
 import { createUser } from '../graphql/mutations';
 
 class UserProvider {
@@ -16,6 +16,15 @@ class UserProvider {
   async getList(filter = null, limit = null) {
     const res = await API.graphql(graphqlOperation(listUsers, { filter, limit }));
     return res.data.listUsers;
+  }
+
+  async searchUser(username, nextToken) {
+    const res = await API.graphql(graphqlOperation(searchUsers, {
+      filter: { username: { wildcard: `${username}*` } },
+      limit: 10,
+      nextToken
+    }));
+    return res.data.searchUsers;
   }
 }
 

@@ -49,6 +49,9 @@ export const onNewMessageInChat = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -109,6 +112,17 @@ export const onUpdateChatRoomById = /* GraphQL */ `
         }
         updatedAt
       }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -166,6 +180,17 @@ export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
           updatedAt
         }
         updatedAt
+      }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -225,6 +250,17 @@ export const onUpdateChatRoomBySubscriberId = /* GraphQL */ `
         }
         updatedAt
       }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -276,11 +312,15 @@ export const onCreateUserConversationByUserId = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
       isWaitForAccept
       isAccepted
+      lastSeenTime
       createdAt
       updatedAt
     }
@@ -332,11 +372,15 @@ export const onUpdateUserConversationByUserId = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
       isWaitForAccept
       isAccepted
+      lastSeenTime
       createdAt
       updatedAt
     }
@@ -356,6 +400,7 @@ export const onCreateUser = /* GraphQL */ `
           chatRoomID
           isWaitForAccept
           isAccepted
+          lastSeenTime
           createdAt
           updatedAt
         }
@@ -380,6 +425,7 @@ export const onUpdateUser = /* GraphQL */ `
           chatRoomID
           isWaitForAccept
           isAccepted
+          lastSeenTime
           createdAt
           updatedAt
         }
@@ -404,6 +450,7 @@ export const onDeleteUser = /* GraphQL */ `
           chatRoomID
           isWaitForAccept
           isAccepted
+          lastSeenTime
           createdAt
           updatedAt
         }
@@ -460,11 +507,15 @@ export const onCreateUserConversation = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
       isWaitForAccept
       isAccepted
+      lastSeenTime
       createdAt
       updatedAt
     }
@@ -516,11 +567,15 @@ export const onUpdateUserConversation = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
       isWaitForAccept
       isAccepted
+      lastSeenTime
       createdAt
       updatedAt
     }
@@ -572,11 +627,15 @@ export const onDeleteUserConversation = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
       isWaitForAccept
       isAccepted
+      lastSeenTime
       createdAt
       updatedAt
     }
@@ -634,6 +693,17 @@ export const onCreateChatRoom = /* GraphQL */ `
           updatedAt
         }
         updatedAt
+      }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
       }
       createdAt
       updatedAt
@@ -693,6 +763,17 @@ export const onUpdateChatRoom = /* GraphQL */ `
         }
         updatedAt
       }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -751,6 +832,17 @@ export const onDeleteChatRoom = /* GraphQL */ `
         }
         updatedAt
       }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -803,6 +895,9 @@ export const onCreateMessage = /* GraphQL */ `
           userID
           chatRoomID
           updatedAt
+        }
+        messages {
+          nextToken
         }
         createdAt
         updatedAt
@@ -859,6 +954,9 @@ export const onUpdateMessage = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -913,6 +1011,9 @@ export const onDeleteMessage = /* GraphQL */ `
           userID
           chatRoomID
           updatedAt
+        }
+        messages {
+          nextToken
         }
         createdAt
         updatedAt

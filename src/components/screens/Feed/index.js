@@ -3,21 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
+import UserService from '../../../services/UserService';
+import UserProvider from '../../../providers/UserProvider';
 import { selectCurrentUser } from '../../../store/Auth';
+import { selectAllChats } from '../../../store/Chat';
+import { fetchChats } from '../../../store/Chat/thunks';
 import PageWrapper from '../../common/PageWrapper';
 import UsersList from '../../common/UsersList';
 import ChatList from '../../common/ChatList';
-import './style.css';
 import ChatRoom from '../ChatRoom';
-import { selectAllUsers } from '../../../store/User';
-import { fetchUsers } from '../../../store/User/thunks';
-import { fetchChats } from '../../../store/Chat/thunks';
-import { selectAllChats } from '../../../store/Chat';
+import './style.css';
 
 const chatService = new ChatService(new ChatProvider());
+const userService = new UserService(new UserProvider());
 
 const Feed = ({ match }) => {
   const [searchContactString, setSearchContactString] = useState('');
+  const [userList, setUserList] = useState([]);
 
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
   const history = useHistory();
@@ -26,21 +28,24 @@ const Feed = ({ match }) => {
     history.push(`/${chatId}`);
   }
 
-  const userList = useSelector(state => selectAllUsers(state.user)).filter(user => user.id !== currentUser);
   const chatList = useSelector(state => selectAllChats(state.chat));
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchChats(currentUser.id));
   }, [currentUser.id, dispatch]);
 
+  useEffect(async () => {
+    if (searchContactString.length < 3) {
+      return;
+    }
+
+    const users = await userService.searchUser(searchContactString.toLowerCase());
+    setUserList(users.items);
+  }, [searchContactString]);
+
   const onUserClick = async (userId) => {
     try {
-      // 0. Check if user already has such conversation
       let chatRoom;
 
       const filter = {
@@ -65,15 +70,15 @@ const Feed = ({ match }) => {
       if (rooms.length) {
         chatRoom = rooms[0];
       } else {
-        // 1. Create a new ChatRoom
         chatRoom = await chatService.createChatRoom(currentUser.id, userId);
-        // 2. Add User to the ChatRoom
         await chatService.createUserConversation(userId, chatRoom.id, false);
-        // 3. Add authenticated user to the ChatRoom
         await chatService.createUserConversation(currentUser.id, chatRoom.id, true);
       }
 
-      // 4. Navigate user to the room
+      if (searchContactString) {
+        setSearchContactString('');
+      }
+
       history.push(`/${chatRoom.id}`);
     } catch(err) {
       console.log('Error while creating a new chat room', err);
@@ -99,7 +104,7 @@ const Feed = ({ match }) => {
           {searchContactString ? (
             <UsersList
               items={userList}
-              onItemClick={onClickChat}
+              onItemClick={onUserClick}
               currentUserId={currentUser.id}
               className="feed__chat-list"
             />
@@ -113,11 +118,6 @@ const Feed = ({ match }) => {
         </div>
         {chatId ? <ChatRoom id={chatId} /> : null}
       </div>
-      <UsersList
-        items={userList}
-        onUserClick={onUserClick}
-        currentUserId={currentUser.id}
-      />
     </PageWrapper>
   );
 }

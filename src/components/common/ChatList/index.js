@@ -16,6 +16,7 @@ const ChatList = ({ items, onItemClick, className }) => {
           isAccepted={item.isWaitForAccept}
           key={item.chatRoom.id}
           onClick={onItemClick}
+          lastSeenTime={new Date(item.lastSeenTime).getTime()}
         />
       ))}
     </div>
