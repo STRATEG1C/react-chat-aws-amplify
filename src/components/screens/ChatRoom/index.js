@@ -45,7 +45,7 @@ const ChatRoom = ({ id }) => {
       chatId: id,
       limit: MESSAGES_PER_PAGE
     }));
-  }, []);
+  }, [id]);
 
   const onReceiveNewMessage = (message) => {
     dispatch(addMessage(message));

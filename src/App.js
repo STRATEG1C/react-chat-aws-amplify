@@ -7,7 +7,6 @@ import { fetchChats } from './store/Chat/thunks';
 import ChatService from './services/ChatService';
 import ChatProvider from './providers/ChatProvider';
 import Routing from './routing';
-import { onCreateUserConversationByUserId } from './graphql/subscriptions';
 
 const chatService = new ChatService(new ChatProvider());
 
@@ -20,11 +19,11 @@ const App = () => {
 
   const onNewChat = useCallback((newConversation) => {
     const { chatRoom } = newConversation;
+    if (chatRoom.initiatorID !== currentUser.id) {
+      toast(`User ${chatRoom.initiator.username} wants to start conversation with you!`);
+    }
 
-    toast(`User ${chatRoom.initiator.username} wants to start conversation with you!`);
-    setTimeout(() => {
-      dispatch(fetchChats(currentUser.id));
-    }, 500);
+    dispatch(fetchChats(currentUser.id));
   }, [dispatch])
 
   const onUpdateChat = useCallback((updatedRoom) => {
@@ -86,7 +85,7 @@ const App = () => {
     const subscription = chatService.subscribeToUpdateOwnConversation(currentUser.id, onConversationUpdate);
 
     return () => subscription.unsubscribe();
-  }, [currentUser, onNewChat]);
+  }, [currentUser, onConversationUpdate]);
 
   return (
     <div className="app">
