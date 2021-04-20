@@ -15,6 +15,7 @@ export const getUser = /* GraphQL */ `
           chatRoomID
           isWaitForAccept
           isAccepted
+          lastSeenTime
           createdAt
           updatedAt
         }
@@ -93,11 +94,15 @@ export const getUserConversation = /* GraphQL */ `
           chatRoomID
           updatedAt
         }
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
       isWaitForAccept
       isAccepted
+      lastSeenTime
       createdAt
       updatedAt
     }
@@ -136,6 +141,7 @@ export const listUserConversations = /* GraphQL */ `
         }
         isWaitForAccept
         isAccepted
+        lastSeenTime
         createdAt
         updatedAt
       }
@@ -196,6 +202,17 @@ export const getChatRoom = /* GraphQL */ `
         }
         updatedAt
       }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -236,6 +253,9 @@ export const listChatRooms = /* GraphQL */ `
           userID
           chatRoomID
           updatedAt
+        }
+        messages {
+          nextToken
         }
         createdAt
         updatedAt
@@ -291,6 +311,9 @@ export const getMessage = /* GraphQL */ `
           userID
           chatRoomID
           updatedAt
+        }
+        messages {
+          nextToken
         }
         createdAt
         updatedAt

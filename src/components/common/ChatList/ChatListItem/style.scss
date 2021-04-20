@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  position: relative;
 
   &:hover {
     background-color: #f4f4f4;
@@ -25,6 +26,18 @@
 
   &__last-message {
     margin-top: 5px;
+  }
+
+  &__badge {
+    background-color: #40a7e3;
+    font-size: 14px;
+    color: #fff;
+    padding: 3px 7px;
+    border-radius: 12px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px;
   }
 
   .chat-last-message {

@@ -19,6 +19,7 @@ type UserConversation
   chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
   isWaitForAccept: Boolean!
   isAccepted: Boolean!
+  lastSeenTime: String
 }
 
 type ChatRoom @model {
@@ -29,6 +30,7 @@ type ChatRoom @model {
   subscriber: User @connection(fields: ["subscriberID"])
   lastMessageID: ID
   lastMessage: Message @connection(fields: ["lastMessageID"])
+  messages: [Message]  @connection(keyName: "byChatRoom", fields: ["id"], limit: 30)
 }
 
 type Message

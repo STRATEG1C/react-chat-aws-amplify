@@ -16,6 +16,10 @@ class UserService {
   async getList(by = null, limit = null) {
     return this._provider.getList(by, limit);
   }
+
+  async searchUser(username, nextToken) {
+    return this._provider.searchUser(username, nextToken);
+  }
 }
 
 export default UserService;
