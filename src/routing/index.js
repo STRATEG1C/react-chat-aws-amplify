@@ -4,7 +4,6 @@ import Login from '../components/screens/Login';
 import AuthenticatedRoute from '../components/common/AuthenticatedRoute';
 import Register from '../components/screens/Register';
 import Feed from '../components/screens/Feed';
-import ChatRoom from '../components/screens/ChatRoom';
 
 const Routing = () => {
   return (

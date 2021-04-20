@@ -24,7 +24,7 @@ const App = () => {
     }
 
     dispatch(fetchChats(currentUser.id));
-  }, [dispatch])
+  }, [dispatch, currentUser])
 
   const onUpdateChat = useCallback((updatedRoom) => {
     const { lastMessage } = updatedRoom;
