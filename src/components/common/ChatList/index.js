@@ -1,23 +1,15 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectAllChats } from '../../../store/Chat';
-import { fetchChats } from '../../../store/Chat/thunks';
-import { selectCurrentUser } from '../../../store/Auth';
+import React from 'react';
 import ChatListItem from './ChatListItem';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../../store/Auth';
 
-const ChatList = ({ onItemClick, className }) => {
+const ChatList = ({ items, onItemClick, className }) => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
-  const chatList = useSelector(state => selectAllChats(state.chat));
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchChats(currentUser.id));
-  }, [currentUser.id, dispatch]);
 
   return (
     <div className={`chat-list ${className}`}>
       <h2>Chat List</h2>
-      {chatList.map((item) => (
+      {items.map((item) => (
         <ChatListItem
           room={item.chatRoom}
           ownUserId={currentUser.id}

@@ -8,7 +8,7 @@ export const getUser = /* GraphQL */ `
       email
       username
       status
-      chatRoomUser {
+      conversations {
         items {
           id
           userID
@@ -37,7 +37,7 @@ export const listUsers = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -58,7 +58,7 @@ export const getUserConversation = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -154,7 +154,7 @@ export const getChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -165,7 +165,7 @@ export const getChatRoom = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -257,7 +257,7 @@ export const getMessage = /* GraphQL */ `
         email
         username
         status
-        chatRoomUser {
+        conversations {
           nextToken
         }
         createdAt
@@ -376,6 +376,37 @@ export const messagesByChatRoom = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+export const searchUsers = /* GraphQL */ `
+  query SearchUsers(
+    $filter: SearchableUserFilterInput
+    $sort: SearchableUserSortInput
+    $limit: Int
+    $nextToken: String
+    $from: Int
+  ) {
+    searchUsers(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+    ) {
+      items {
+        id
+        email
+        username
+        status
+        conversations {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
     }
   }
 `;

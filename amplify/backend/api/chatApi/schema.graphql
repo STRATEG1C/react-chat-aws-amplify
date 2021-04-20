@@ -1,10 +1,11 @@
 type User
+@searchable
 @model {
   id: ID!
   email: String!
   username: String!
   status: String
-  chatRoomUser: [UserConversation] @connection(keyName: "byUser", fields: ["id"])
+  conversations: [UserConversation] @connection(keyName: "byUser", fields: ["id"])
 }
 
 type UserConversation

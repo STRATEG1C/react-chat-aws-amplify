@@ -7,6 +7,7 @@ import { fetchChats } from './store/Chat/thunks';
 import ChatService from './services/ChatService';
 import ChatProvider from './providers/ChatProvider';
 import Routing from './routing';
+import { onCreateUserConversationByUserId } from './graphql/subscriptions';
 
 const chatService = new ChatService(new ChatProvider());
 
@@ -17,8 +18,10 @@ const App = () => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
   const chatRooms = useSelector(state => selectAllChats(state.chat));
 
-  const onNewChat = useCallback((newRoom) => {
-    toast(`User ${newRoom.initiator.username} wants to start conversation with you!`);
+  const onNewChat = useCallback((newConversation) => {
+    const { chatRoom } = newConversation;
+
+    toast(`User ${chatRoom.initiator.username} wants to start conversation with you!`);
     setTimeout(() => {
       dispatch(fetchChats(currentUser.id));
     }, 500);
@@ -44,7 +47,7 @@ const App = () => {
       return;
     }
 
-    const subscription = chatService.subscribeToCreateNewRoom(currentUser.id, onNewChat);
+    const subscription = chatService.subscribeToCreateNewConversation(currentUser.id, onNewChat);
 
     return () => subscription.unsubscribe();
   }, [currentUser, onNewChat]);
@@ -70,6 +73,20 @@ const App = () => {
 
     return () => unsubscribeFromRoomUpdates();
   }, [chatRooms, chatRooms.length]);
+
+  const onConversationUpdate = (updatedConversation) => {
+    dispatch(fetchChats(currentUser.id));
+  }
+
+  useEffect(() => {
+    if (!currentUser || !currentUser.id) {
+      return;
+    }
+
+    const subscription = chatService.subscribeToUpdateOwnConversation(currentUser.id, onConversationUpdate);
+
+    return () => subscription.unsubscribe();
+  }, [currentUser, onNewChat]);
 
   return (
     <div className="app">
