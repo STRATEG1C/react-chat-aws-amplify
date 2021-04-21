@@ -5,7 +5,6 @@ import PageWrapper from '../../common/PageWrapper';
 import TextInput from '../../common/TextInput';
 import Button from '../../common/Button';
 import { Link } from 'react-router-dom';
-import UsersList from '../../common/UsersList';
 
 class Login extends Component {
   constructor(props) {

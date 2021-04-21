@@ -53,8 +53,12 @@ class ChatService {
     return this._provider.subscribeToCreateNewConversation(userId, callback);
   }
 
-  subscribeToUpdateRoom(id, callback) {
-    return this._provider.subscribeToUpdateRoom(id, callback);
+  subscribeToUpdateRoomBySubscriberId(id, callback) {
+    return this._provider.subscribeToUpdateRoomBySubscriberId(id, callback);
+  }
+
+  subscribeToUpdateRoomByInitiatorId(id, callback) {
+    return this._provider.subscribeToUpdateRoomByInitiatorId(id, callback);
   }
 
   subscribeToUpdateOwnConversation(userId, callback) {

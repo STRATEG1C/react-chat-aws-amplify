@@ -59,75 +59,6 @@ export const onNewMessageInChat = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateChatRoomById = /* GraphQL */ `
-  subscription OnUpdateChatRoomById($id: ID!) {
-    onUpdateChatRoomById(id: $id) {
-      id
-      initiatorID
-      subscriberID
-      initiator {
-        id
-        email
-        username
-        status
-        conversations {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      subscriber {
-        id
-        email
-        username
-        status
-        conversations {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      lastMessageID
-      lastMessage {
-        id
-        createdAt
-        content
-        userID
-        chatRoomID
-        user {
-          id
-          email
-          username
-          status
-          createdAt
-          updatedAt
-        }
-        chatRoom {
-          id
-          initiatorID
-          subscriberID
-          lastMessageID
-          createdAt
-          updatedAt
-        }
-        updatedAt
-      }
-      messages {
-        items {
-          id
-          createdAt
-          content
-          userID
-          chatRoomID
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
   subscription OnCreateChatRoomBySubscriberId($subscriberID: ID!) {
     onCreateChatRoomBySubscriberId(subscriberID: $subscriberID) {
@@ -200,6 +131,75 @@ export const onCreateChatRoomBySubscriberId = /* GraphQL */ `
 export const onUpdateChatRoomBySubscriberId = /* GraphQL */ `
   subscription OnUpdateChatRoomBySubscriberId($subscriberID: ID!) {
     onUpdateChatRoomBySubscriberId(subscriberID: $subscriberID) {
+      id
+      initiatorID
+      subscriberID
+      initiator {
+        id
+        email
+        username
+        status
+        conversations {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      subscriber {
+        id
+        email
+        username
+        status
+        conversations {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      lastMessageID
+      lastMessage {
+        id
+        createdAt
+        content
+        userID
+        chatRoomID
+        user {
+          id
+          email
+          username
+          status
+          createdAt
+          updatedAt
+        }
+        chatRoom {
+          id
+          initiatorID
+          subscriberID
+          lastMessageID
+          createdAt
+          updatedAt
+        }
+        updatedAt
+      }
+      messages {
+        items {
+          id
+          createdAt
+          content
+          userID
+          chatRoomID
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateChatRoomByInitiatorId = /* GraphQL */ `
+  subscription OnUpdateChatRoomByInitiatorId($initiatorID: ID!) {
+    onUpdateChatRoomByInitiatorId(initiatorID: $initiatorID) {
       id
       initiatorID
       subscriberID

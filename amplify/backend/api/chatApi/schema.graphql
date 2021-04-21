@@ -52,13 +52,13 @@ type Subscription {
   onNewMessageInChat(chatRoomID: ID!): Message
   @aws_subscribe(mutations: ["createMessage"])
 
-  onUpdateChatRoomById(id: ID!): ChatRoom
-  @aws_subscribe(mutations: ["updateChatRoom"])
-
   onCreateChatRoomBySubscriberId(subscriberID: ID!): ChatRoom
   @aws_subscribe(mutations: ["createChatRoom"])
 
   onUpdateChatRoomBySubscriberId(subscriberID: ID!): ChatRoom
+  @aws_subscribe(mutations: ["updateChatRoom"])
+
+  onUpdateChatRoomByInitiatorId(initiatorID: ID!): ChatRoom
   @aws_subscribe(mutations: ["updateChatRoom"])
 
   onCreateUserConversationByUserId(userID: ID!): UserConversation

@@ -35,13 +35,17 @@ const Feed = ({ match }) => {
     dispatch(fetchChats(currentUser.id));
   }, [currentUser.id, dispatch]);
 
-  useEffect(async () => {
-    if (searchContactString.length < 3) {
-      return;
+  useEffect(() => {
+    const searchUsers = async () => {
+      if (searchContactString.length < 3) {
+        return;
+      }
+
+      const users = await userService.searchUser(searchContactString.toLowerCase());
+      setUserList(users.items);
     }
 
-    const users = await userService.searchUser(searchContactString.toLowerCase());
-    setUserList(users.items);
+    searchUsers();
   }, [searchContactString]);
 
   const onUserClick = async (userId) => {

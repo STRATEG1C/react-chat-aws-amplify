@@ -23,7 +23,6 @@ const MESSAGES_PER_PAGE = 20;
 
 const ChatRoom = ({ id }) => {
   const [userConversation, setUserConversation] = useState(null);
-  const [newMessageSubscription, setNewMessageSubscription] = useState(null);
   const dispatch = useDispatch();
   const history = useHistory();
   const chatRoomData = useSelector(state => selectChatRoom(state.chat));
@@ -31,68 +30,48 @@ const ChatRoom = ({ id }) => {
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  const onLeaveRoom = () => {
-    chatService.updateConversation(userConversation.id, {
-      lastSeenTime: new Date().toISOString()
-    });
-  }
+  // const onLeaveRoom = () => {
+  //   chatService.updateConversation(userConversation.id, {
+  //     lastSeenTime: new Date().toISOString()
+  //   });
+  // }
 
-  const onMount = async () => {
-    const userConversation = await chatService.getUserConversation(currentUser.id, id);
-    if (!userConversation) {
-      history.push('/');
+  useEffect(() => {
+    const fetchChatData = async () => {
+      const userConversation = await chatService.getUserConversation(currentUser.id, id);
+      if (!userConversation) {
+        history.push('/');
+      }
+
+      const updatedUserConversation = await chatService.updateConversation(userConversation.id, {
+        lastSeenTime: new Date().toISOString()
+      });
+
+      setUserConversation(updatedUserConversation);
+
+      dispatch(fetchChatRoom(id));
+      dispatch(fetchMessages({
+        chatId: id,
+        limit: MESSAGES_PER_PAGE
+      }));
     }
 
-    const updatedUserConversation = await chatService.updateConversation(userConversation.id, {
-      lastSeenTime: new Date().toISOString()
-    });
-    setUserConversation(updatedUserConversation);
+    fetchChatData();
+  }, [id, currentUser.id, dispatch, history]);
 
-    dispatch(fetchChatRoom(id));
-    dispatch(fetchMessages({
-      chatId: id,
-      limit: MESSAGES_PER_PAGE
-    }));
-
-    return () => onLeaveRoom();
-  }
-
-  const onReceiveNewMessage = (message) => {
-    dispatch(addMessage(message));
-  }
-
-  const subscribeToNewMessages = () => {
-    setNewMessageSubscription(
-      chatService.subscribeToChatRoom(id, onReceiveNewMessage)
-    );
-  }
-
-  const unsubscribeFromNewMessages = () => {
-    newMessageSubscription.unsubscribe();
-    setNewMessageSubscription(null);
-  }
-
-  const onReceiveChatRoomData = () => {
+  useEffect(() => {
     if (!chatRoomData) {
       return;
     }
 
-    if (newMessageSubscription) {
-      unsubscribeFromNewMessages();
-    }
-
-    subscribeToNewMessages();
-
-    return () => {
-      if (newMessageSubscription) {
-        unsubscribeFromNewMessages();
-      }
+    const onReceiveNewMessage = (message) => {
+      dispatch(addMessage(message));
     };
-  }
 
-  useEffect(onMount, []);
+    const newMessageSubscription = chatService.subscribeToChatRoom(id, onReceiveNewMessage);
 
-  useEffect(onReceiveChatRoomData, [chatRoomData]);
+    return () => newMessageSubscription.unsubscribe();
+  }, [chatRoomData, dispatch, id]);
 
   const onAcceptConversation = async (state) => {
     const updatedConversation = await chatService.updateConversation(userConversation.id, {
