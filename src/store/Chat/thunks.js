@@ -8,6 +8,10 @@ export const fetchChats = createAsyncThunk('FETCH_CHATS', async (userId) => {
   return await chatService.getUserConversations(userId);
 });
 
+export const fetchBannedChats = createAsyncThunk('FETCH_BANNED_CHATS', async (userId) => {
+  return await chatService.getBannedChats(userId);
+})
+
 export const fetchChatRoom = createAsyncThunk('FETCH_CHAT_ROOM', async (chatId) => {
   return await chatService.getChatRoom(chatId);
 });

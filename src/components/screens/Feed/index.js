@@ -6,13 +6,14 @@ import ChatProvider from '../../../providers/ChatProvider';
 import UserService from '../../../services/UserService';
 import UserProvider from '../../../providers/UserProvider';
 import { selectCurrentUser } from '../../../store/Auth';
-import { selectAllChats } from '../../../store/Chat';
-import { fetchChats } from '../../../store/Chat/thunks';
+import { selectAcceptedChats, selectBannedChats } from '../../../store/Chat';
+import { fetchBannedChats, fetchChats } from '../../../store/Chat/thunks';
 import PageWrapper from '../../common/PageWrapper';
 import UsersList from '../../common/UsersList';
 import ChatList from '../../common/ChatList';
 import ChatRoom from '../ChatRoom';
 import './style.css';
+import BannedChatList from './BannedChatList';
 
 const chatService = new ChatService(new ChatProvider());
 const userService = new UserService(new UserProvider());
@@ -28,11 +29,13 @@ const Feed = ({ match }) => {
     history.push(`/${chatId}`);
   }
 
-  const chatList = useSelector(state => selectAllChats(state.chat));
+  const chatList = useSelector(state => selectAcceptedChats(state.chat));
+  const bannedChats = useSelector(state => selectBannedChats(state.chat));
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchChats(currentUser.id));
+    dispatch(fetchBannedChats(currentUser.id));
   }, [currentUser.id, dispatch]);
 
   useEffect(() => {
@@ -119,6 +122,13 @@ const Feed = ({ match }) => {
               className="feed__chat-list"
             />
           )}
+          {bannedChats.length ? (
+            <BannedChatList
+              items={bannedChats}
+              onItemClick={onClickChat}
+              className="feed__chat-list"
+            />
+          ) : null}
         </div>
         {chatId ? <ChatRoom id={chatId} /> : null}
       </div>

@@ -43,11 +43,13 @@ const ChatRoom = ({ id }) => {
         history.push('/');
       }
 
-      const updatedUserConversation = await chatService.updateConversation(userConversation.id, {
-        lastSeenTime: new Date().toISOString()
-      });
+      setUserConversation(userConversation);
 
-      setUserConversation(updatedUserConversation);
+      if (userConversation.isAccepted) {
+        await chatService.updateConversation(userConversation.id, {
+          lastSeenTime: new Date().toISOString()
+        });
+      }
 
       dispatch(fetchChatRoom(id));
       dispatch(fetchMessages({
