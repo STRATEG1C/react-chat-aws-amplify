@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchChatRoom, fetchChats, fetchMessages } from './thunks';
+import { fetchBannedChats, fetchChatRoom, fetchChats, fetchMessages } from './thunks';
 
 const initialState = {
   chatRooms: [],
+  bannedChats: [],
   chatRoom: null,
   messages: [],
   isLoading: false,
@@ -34,6 +35,18 @@ export const chatSlice = createSlice({
       state.isLoading = false;
     },
     [fetchChats.rejected]: (state, action) => {
+      state.isError = true;
+      state.isLoading = false;
+    },
+
+    [fetchBannedChats.pending]: (state, action) => {
+      state.isLoading = true;
+    },
+    [fetchBannedChats.fulfilled]: (state, action) => {
+      state.bannedChats = action.payload;
+      state.isLoading = false;
+    },
+    [fetchBannedChats.rejected]: (state, action) => {
       state.isError = true;
       state.isLoading = false;
     },
@@ -71,7 +84,8 @@ export const chatSlice = createSlice({
 
 export const { addRoom, updateRoom, addMessage } = chatSlice.actions;
 
-export const selectAllChats = state => state.chatRooms;
+export const selectAcceptedChats = state => state.chatRooms;
+export const selectBannedChats = state => state.bannedChats;
 export const selectChatRoom = state => state.chatRoom;
 export const selectMessages = state => state.messages;
 export const selectNextMessages = state => state.nextMessages;

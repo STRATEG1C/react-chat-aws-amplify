@@ -2,21 +2,18 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { selectCurrentUser } from './store/Auth';
-import { selectAllChats } from './store/Chat';
+import { selectAcceptedChats } from './store/Chat';
 import { fetchChats } from './store/Chat/thunks';
-import UserService from './services/UserService';
-import UserProvider from './providers/UserProvider';
 import ChatService from './services/ChatService';
 import ChatProvider from './providers/ChatProvider';
 import Routing from './routing';
 
 const chatService = new ChatService(new ChatProvider());
-const userService = new UserService(new UserProvider());
 
 const App = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
-  const chatRooms = useSelector(state => selectAllChats(state.chat));
+  const chatRooms = useSelector(state => selectAcceptedChats(state.chat));
 
   useEffect(() => {
     if (!currentUser || !currentUser.id) {

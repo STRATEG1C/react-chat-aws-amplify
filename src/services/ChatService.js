@@ -21,8 +21,16 @@ class ChatService {
     return this._provider.getUserConversations(userId);
   }
 
+  async getBannedChats(userId) {
+    return this._provider.getBannedChats(userId);
+  }
+
   async getUserConversation(userId, chatId) {
     return this._provider.getUserConversation(userId, chatId);
+  }
+
+  async getBlockedUserConversations(by, limit) {
+    return this._provider.getBlockedUserConversations(by, limit);
   }
 
   async updateConversation(id, data) {

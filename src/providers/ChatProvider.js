@@ -83,6 +83,43 @@ class ChatProvider {
     return res.data.listUserConversations.items;
   }
 
+  async getBannedChats(userID) {
+    const res = await API.graphql(graphqlOperation(listUserConversations, {
+      filter: {
+        and: [
+          {
+            userID: {
+              eq: userID
+            }
+          },
+          {
+            isAccepted: {
+              eq: false
+            },
+          },
+          {
+            isWaitForAccept: {
+              eq: false
+            }
+          }
+        ]
+      }
+    }));
+    return res.data.listUserConversations.items;
+  }
+
+  async getBlockedUserConversations(userID) {
+    const res = await API.graphql(graphqlOperation(listUserConversations, {
+      filter: {
+        and: [
+          { userID: { eq: userID } },
+          { isAccepted: { eq: false } }
+        ]
+      }
+    }));
+    return res.data.listUserConversations;
+  }
+
   async getUserConversation(userID, chatID) {
     const res = await API.graphql(graphqlOperation(listUserConversations, {
       filter: {
