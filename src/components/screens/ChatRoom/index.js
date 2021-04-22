@@ -30,11 +30,18 @@ const ChatRoom = ({ id }) => {
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  // const onLeaveRoom = () => {
-  //   chatService.updateConversation(userConversation.id, {
-  //     lastSeenTime: new Date().toISOString()
-  //   });
-  // }
+  const updateReadTime = async () => {
+    await chatService.updateConversation(userConversation.id, {
+      lastSeenTime: new Date().toISOString()
+    });
+  };
+
+  useEffect(() => {
+    if (!userConversation) {
+      return;
+    }
+    updateReadTime();
+  }, [userConversation]);
 
   useEffect(() => {
     const fetchChatData = async () => {
@@ -44,12 +51,6 @@ const ChatRoom = ({ id }) => {
       }
 
       setUserConversation(userConversation);
-
-      if (userConversation.isAccepted) {
-        await chatService.updateConversation(userConversation.id, {
-          lastSeenTime: new Date().toISOString()
-        });
-      }
 
       dispatch(fetchChatRoom(id));
       dispatch(fetchMessages({
@@ -66,8 +67,9 @@ const ChatRoom = ({ id }) => {
       return;
     }
 
-    const onReceiveNewMessage = (message) => {
+    const onReceiveNewMessage = async (message) => {
       dispatch(addMessage(message));
+      await updateReadTime();
     };
 
     const newMessageSubscription = chatService.subscribeToChatRoom(id, onReceiveNewMessage);
@@ -78,6 +80,18 @@ const ChatRoom = ({ id }) => {
   const onAcceptConversation = async (state) => {
     const updatedConversation = await chatService.updateConversation(userConversation.id, {
       isWaitForAccept: false,
+      isAccepted: state
+    });
+
+    if (!state) {
+      return history.push('/');
+    }
+
+    setUserConversation(updatedConversation);
+  }
+
+  const onUnbanConversation = async (state) => {
+    const updatedConversation = await chatService.updateConversation(userConversation.id, {
       isAccepted: state
     });
 
@@ -115,6 +129,7 @@ const ChatRoom = ({ id }) => {
     <div className="chat-room-wrapper">
       <Link to="/" className="back">{`<- Close`}</Link>
       {userConversation.isWaitForAccept ? <AcceptChatBlock onAccept={onAcceptConversation} /> : <AddMessageBlock onAdd={onAddMessage} />}
+      {!userConversation.isAccepted ? <AcceptChatBlock onAccept={onUnbanConversation} /> : null}
       <LazyLoad
         onLoadMore={onLoadMoreMessages}
         className="message-scrollable-list "
