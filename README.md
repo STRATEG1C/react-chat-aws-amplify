@@ -201,8 +201,11 @@ type Subscription {
 Запросы к DynamoDB вынесены в отдельные сервисы
 
 - [AuthService](./src/providers/AuthProvider.js)
+  Сервис работает с AWS Cognito и имеет методы регистрации, авторизации и выхода пользователя из системы.
 - [ChatService](./src/providers/ChatProvider.js)
+  Сервис работает со всем, что связано с чатами.
 - [UserService](./src/providers/UserProvider.js)
+  Сервис работает со всеми пользователями системы.
 
 # Getting Started with Create React App
 
