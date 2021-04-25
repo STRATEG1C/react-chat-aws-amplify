@@ -20,7 +20,183 @@
 
 Схема архитектуры приложения показана на рисунке
 
-![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![Architecture image](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/architecture.jpg?raw=true)
+
+Схема организации базы данных примера представлена на рисунке
+
+![Chat app scheme](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/chat-app-scheme.jpg?raw=true)
+
+## 1. Подготовка окружения
+
+Если в проекте уже используется amplify, можно перейти к пункту 2 “Добавление авторизации”.
+
+- 1.1. Развернуть фронтенд приложение (react, react-native, vue, js).
+- 1.2. Установить глобально amplify cli для работы с сервисами aws из консоли, выполнив команду.
+
+`npm i -g @aws-amplify/cli`
+
+- 1.3 Добавить пользователя (клиента) для разработки и получить ключи доступа (accessKey и secretKey), выполнив команду.
+
+`amplify configure`
+
+Сохранить на машине предоставляемый csv документ с доступами к клиенту.
+
+- 1.4. В папке с проектом инициализировать backend для приложения.
+
+`amplify init`
+
+- Ввести имя проекта.
+- Ввести имя текущего env (по умолчанию dev).
+- Выбрать свой редактор (PHPStorm нет, выбираем none)
+- Выбрать тип нашего приложения (javascript)
+- Выбрать фреймворк, который мы используем (React)
+- Даем еще пару настроек, связанных с React
+- Выбрать тип аутентификации нашего приложения для связи с AWS сервисами при разработке (AWS profile).
+- Выбрать профиль, который мы создали ранее.
+
+<br />
+
+- 1.5 В папке с проектом установить библиотеку aws-amplify для работы с aws сервисами из кода.
+
+`npm install aws-amplify`
+
+## 2. Добавление авторизации
+Если уже есть настроенный User Pool на AWS Cognito, его можно переиспользовать, как здесь и сразу перейти к пункту 3 “Добавление API” .
+
+- 2.1 Настроить Cognito User Pool через web-интерфейс AWS и перейти к пункту 3.
+- 2.2 Если настраивать Cognito User Pool через amplify cli в приложении, добавить Auth категорию с помощью команды
+
+`amplify add auth`
+
+- Выбрать дефолтную конфигурацию
+- Выбрать авторизацию по email
+- Пропустить расширенные настройки
+
+<br>
+
+- 2.3 Загрузить изменения для инициализации необходимых сервисов на AWS с помощью команды
+
+`amplify push`
+
+Посмотреть добавленные сервисы и редактировать настройки проекта можно через web-интерфейс. Открыть его можно, выполнив в приложении команду
+
+`amplify console`
+
+## 3. Добавление API
+
+- 3.1 Добавить категорию API с помощью команды
+
+`amplify add api`
+
+- Выбрать тип API (GraphQL API)
+- Ввести имя API для отображения в AWS консоле
+- Выбрать тип авторизации по API key
+- Согласиться со стандартными настроками
+- В настройке шаблона схемы выбираем Single object… “Todo”...
+- На вопросе хотим ли начать редактирование схемы ответить Yes
+
+В директории проекта появится папка amplify с такой структурой, как на рисунке 3.1.
+
+![Folder structure](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/folder-structure.png?raw=true)
+
+- 3.2 Открыть файл схем по пути /amplify/api/{apiName}/schema.graphql (apiName - на картинке ChatApi) и поменять его содержимое слудующее:
+
+```
+type User
+@searchable
+@model {
+ id: ID!
+ email: String!
+ username: String!
+ status: String
+ conversations: [UserConversation] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type UserConversation
+@model
+@key(name: "byUser", fields: ["userID", "chatRoomID"])
+@key(name: "byChatRoom", fields: ["chatRoomID", "userID"]) {
+ id: ID!
+ userID: ID!
+ chatRoomID: ID!
+ user: User @connection(fields: ["userID"])
+ chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+ isWaitForAccept: Boolean!
+ isAccepted: Boolean!
+ lastSeenTime: String
+}
+
+type ChatRoom @model {
+ id: ID!
+ initiatorID: ID!
+ subscriberID: ID!
+ initiator: User @connection(fields: ["initiatorID"])
+ subscriber: User @connection(fields: ["subscriberID"])
+ lastMessageID: ID
+ lastMessage: Message @connection(fields: ["lastMessageID"])
+ messages: [Message]  @connection(keyName: "byChatRoom", fields: ["id"], limit: 30)
+}
+
+type Message
+@model
+@key(
+ name: "byChatRoom",
+ fields: ["chatRoomID", "createdAt"],
+ queryField: "messagesByChatRoom") {
+ id: ID!
+ createdAt: String!
+ content: String!
+ userID: ID!
+ chatRoomID: ID!
+ user: User @connection(fields: ["userID"])
+ chatRoom: ChatRoom @connection(fields: ["chatRoomID"])
+}
+
+type Subscription {
+ onNewMessageInChat(chatRoomID: ID!): Message
+ @aws_subscribe(mutations: ["createMessage"])
+
+ onCreateChatRoomBySubscriberId(subscriberID: ID!): ChatRoom
+ @aws_subscribe(mutations: ["createChatRoom"])
+
+ onUpdateChatRoomBySubscriberId(subscriberID: ID!): ChatRoom
+ @aws_subscribe(mutations: ["updateChatRoom"])
+
+ onUpdateChatRoomByInitiatorId(initiatorID: ID!): ChatRoom
+ @aws_subscribe(mutations: ["updateChatRoom"])
+
+ onCreateUserConversationByUserId(userID: ID!): UserConversation
+ @aws_subscribe(mutations: ["createUserConversation"])
+
+ onUpdateUserConversationByUserId(userID: ID!): UserConversation
+ @aws_subscribe(mutations: ["updateUserConversation"])
+}
+
+```
+
+- @model - означает, что на основании сущности будет создана таблица.
+- @connection - означает, что содержимое этого поля будет взято из связанной таблицы.
+- @key - означает индекс. По нему можно делать @connection из других таблиц, или же делать запросы с сортировкой по этому ключу.
+- @searchable - означает, что на поле будет создан полнотекстовый индекс и запрос для поиска по слову или части слова.
+
+<br>
+- 3.3 Загрузить изменения и согласиться со стандартными настройками.
+
+`amplify push`
+
+После публикации изменений API, в проекте появится папка graphql с запросами к API, как на рисунке 3.2.
+
+![Queries](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/queries.png?raw=true)
+
+- mutations.js - запросы на создание, редактирование и удаление данных.
+- queries.js - запросы на получение данных.
+- subscriptions.js - подписки на создание, обновление, удаление сущностей.
+
+### Мы создали API для чатов!
+
+## 4. Построение Frontend
+
+
 
 # Getting Started with Create React App
 
