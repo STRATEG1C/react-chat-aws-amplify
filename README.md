@@ -6,6 +6,22 @@
 3. Запустить проект в дев режиме
 #### `npm start`
 
+# Инструкция как сделать чат приложение на AWS c использованием Amplify
+
+Для создания чатов на [AWS](https://aws.amazon.com/ru/) в этом примере использоваться сервис [AWS Amplify](https://aws.amazon.com/ru/amplify/), и библиотека для frontend [aws-amplify](https://docs.amplify.aws/start/q/integration/react), что позволяет в короткие сроки построить backend для мобильных и веб приложений.
+
+Авторизация и регистрация пользователей происходит через сервис [Amazon Cognito](https://aws.amazon.com/ru/cognito/) который включает регистрацию, авторизацию пользователей по стандартной процедуре и через социальные сети и отправку писем подтверждения.
+
+<b style='color:red'>ВАЖНО!</b> В этом случае необходимо сразу закладывать что пользователи приложения будут регистрироваться и авторизоваться именно с помощью сервиса AWS Cognito. В противном случае API нужно будет делать полностью открытым и управлять доступом внутри приложения.
+
+Запросы к backend реализованы с помощью [GraphQL API](https://docs.amplify.aws/lib/graphqlapi/getting-started/q/platform/js), предоставляемый Amplify, и, который является удобным решением для frontend разработки.
+
+Для хранения записей используется [DynamoDB](https://aws.amazon.com/ru/dynamodb/), который является JSON базой данных, и автоматически создается при использовании GraphQL API.
+
+Схема архитектуры приложения показана на рисунке
+
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
