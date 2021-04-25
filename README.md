@@ -196,7 +196,13 @@ type Subscription {
 
 ## 4. Построение Frontend
 
+Пример реализации приложения чатов на React + Amplify можно найти в этом репозитории :)
 
+Запросы к DynamoDB вынесены в отдельные сервисы
+
+- [AuthService](./src/providers/AuthProvider.js)
+- [ChatService](./src/providers/ChatProvider.js)
+- [UserService](./src/providers/UserProvider.js)
 
 # Getting Started with Create React App
 
