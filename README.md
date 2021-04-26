@@ -61,7 +61,7 @@
 `npm install aws-amplify`
 
 ## 2. Добавление авторизации
-Если уже есть настроенный User Pool на AWS Cognito, его можно переиспользовать, как здесь и сразу перейти к пункту 3 “Добавление API” .
+Если уже есть настроенный User Pool на AWS Cognito, его можно переиспользовать, [как здесь](https://docs.amplify.aws/lib/auth/start/q/platform/js#re-use-existing-authentication-resource) и сразу перейти к пункту 3 “Добавление API” .
 
 - 2.1 Настроить Cognito User Pool через web-интерфейс AWS и перейти к пункту 3.
 - 2.2 Если настраивать Cognito User Pool через amplify cli в приложении, добавить Auth категорию с помощью команды
