@@ -20,11 +20,11 @@
 
 Схема архитектуры приложения показана на рисунке
 
-![Architecture image](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/architecture.jpg?raw=true)
+![Architecture image](./images/architecture.jpg?raw=true)
 
 Схема организации базы данных примера представлена на рисунке
 
-![Chat app scheme](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/chat-app-scheme.jpg?raw=true)
+![Chat app scheme](./images/chat-app-scheme.jpg?raw=true)
 
 ## 1. Подготовка окружения
 
@@ -97,7 +97,7 @@
 
 В директории проекта появится папка amplify с такой структурой, как на рисунке 3.1.
 
-![Folder structure](https://github.com/STRATEG1C/react-chat-aws-amplify/blob/master/images/folder-structure.png?raw=true)
+![Folder structure](./images/folder-structure.png?raw=true)
 
 - 3.2 Открыть файл схем по пути /amplify/api/{apiName}/schema.graphql (apiName - на картинке ChatApi) и поменять его содержимое слудующее:
 
@@ -198,14 +198,40 @@ type Subscription {
 
 Пример реализации приложения чатов на React + Amplify можно найти в этом репозитории :)
 
-Запросы к DynamoDB вынесены в отдельные сервисы
+Запросы к DynamoDB вынесены в отдельные сервисы. Их возможная реализация расположена в файлах ниже.
 
-- [AuthService](./src/providers/AuthProvider.js)
-  Сервис работает с AWS Cognito и имеет методы регистрации, авторизации и выхода пользователя из системы.
-- [ChatService](./src/providers/ChatProvider.js)
+### [AuthService](./src/providers/AuthProvider.js)
+  Сервис работает с AWS Cognito и имеет методы регистрации, авторизации и выхода пользователя из системы 
+  <br>
+  - register - регистрация, создание нового пользователя в UserPool сервиса AWS Cognito
+  - login - авторизация пользователя, получение информации с Cognito и токена
+  - logout - выход из системы, удаление токена, выданного Cognito
+
+### [ChatService](./src/providers/ChatProvider.js)
   Сервис работает со всем, что связано с чатами.
-- [UserService](./src/providers/UserProvider.js)
+  <br>
+  - createChatRoom - создание чат комнаты между инициатором и подписчиком
+  - createUserConversation - добавление пользователя в чат комнату, создание подписки на чат. Нужно для отображения чата у пользователя.
+  - updateConversation - обновление подписки на чат, на пример, пользователь подтвердил участие в чате или отклонил.
+  - getChatRoom - получение информации о чат комнате
+  - getUserConversations - получение списка подписок на чаты пользователя для отображения списка его чатов
+  - getBannedChats - получение чатов, которые пользователь отклонил
+  - getUserConversation - получение одной подписки на чат, на пример, для проверки, является ли пользователь его участником
+  - getMessagesByChatId - получение списка сообщений для конкретной чат комнаты
+  - updateChatRoom - обновление информации о чат комнате, на пример обновить последнее сообщение
+  - createChatMessage - отправка сообщения в комнату
+  - subscribeToChatRoom - подписка на отслеживание новых сообщений в конкретной комнате и показа их на экране
+  - subscribeToUpdateRoomBySubscriberId - подписка на отслеживание новых сообщений в чатах, где пользователь есть подписчиком
+  - subscribeToUpdateRoomByInitiatorId - подписка на отслеживание новых сообщений в чатах, где пользователь есть инициатором
+  - subscribeToUpdateOwnConversation - подписка на обновление подписок пользователя на чаты, на пример, если пользователь отклонил чат, обновить список
+
+### [UserService](./src/providers/UserProvider.js)
   Сервис работает со всеми пользователями системы.
+  <br>
+  - create - создание пользователя, после первой успешной авторизации
+  - getById - получение пользователя
+  - getList - получение списка пользователей
+  - searchUser - поиск пользователей по username по части слова или целому слову
 
 # Getting Started with Create React App
 
