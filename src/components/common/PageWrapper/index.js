@@ -21,11 +21,18 @@ const PageWrapper = ({ title, children }) => {
       .then(history.push('/login'));
   }
 
+  const moveToLogin = () => {
+    dispatch(clearUser());
+    history.push('/login');
+  }
+
+  console.log(currentUser);
+
   return (
     <div className="page-wrapper">
       <div className="page-wrapper__header">
         <h1>{title}</h1>
-        {currentUser ? <button onClick={onLogOut}>Log out</button> : <Link to="/login">Login</Link>}
+        {currentUser ? <button onClick={onLogOut}>Log out</button> : <button onClick={moveToLogin}>Login</button>}
       </div>
       {children}
     </div>

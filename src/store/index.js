@@ -7,13 +7,15 @@ const getSavedState = () => {
   return JSON.parse(localStorage.getItem('state')) || {};
 }
 
+export const combinedReducer = {
+  auth: authReducer,
+  user: userReducer,
+  chat: chatReducer
+}
+
 const store = configureStore({
   preloadedState: getSavedState(),
-  reducer: {
-    auth: authReducer,
-    user: userReducer,
-    chat: chatReducer
-  }
+  reducer: combinedReducer
 });
 
 store.subscribe(() => {

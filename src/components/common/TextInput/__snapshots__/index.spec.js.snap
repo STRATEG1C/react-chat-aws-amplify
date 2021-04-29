@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test TextInput component should be rendered 1`] = `
+<DocumentFragment>
+  <div
+    class="input-group"
+  >
+    <label
+      for="foo"
+    >
+      foo
+    </label>
+    <input
+      class="input-group__input bar"
+      data-testid="text-input"
+      name="foo"
+      type="text"
+      value="bar"
+    />
+  </div>
+</DocumentFragment>
+`;

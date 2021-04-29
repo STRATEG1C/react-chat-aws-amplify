@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test PageWrapper component Should be rendered 1`] = `
+<DocumentFragment>
+  <div
+    class="page-wrapper"
+  >
+    <div
+      class="page-wrapper__header"
+    >
+      <h1>
+        foo
+      </h1>
+      <button>
+        Login
+      </button>
+    </div>
+    Bar
+  </div>
+</DocumentFragment>
+`;
