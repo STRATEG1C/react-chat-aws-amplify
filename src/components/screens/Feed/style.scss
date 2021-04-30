@@ -6,15 +6,15 @@
 .user-card {
     border-bottom: 1px solid gray;
     padding: 20px;
-}
 
-.user-card:hover {
-    background-color: #eaeaea;
-    cursor: pointer;
-}
+    &:hover {
+        background-color: #eaeaea;
+        cursor: pointer;
+    }
 
-.user-card:last-child {
-    border-bottom: none;
+    &:last-child {
+        border-bottom: none;
+    }
 }
 
 .feed__chat-list {

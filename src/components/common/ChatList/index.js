@@ -1,18 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ChatListItem from './ChatListItem';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../../store/Auth';
 
-const ChatList = ({ items, onItemClick, className }) => {
-  const currentUser = useSelector(state => selectCurrentUser(state.auth));
-
+const ChatList = ({ items, onItemClick, ownUserId, className }) => {
   return (
     <div className={`chat-list ${className}`}>
       <h2>Chat List</h2>
       {items.map((item) => (
         <ChatListItem
           room={item.chatRoom}
-          ownUserId={currentUser.id}
+          ownUserId={ownUserId}
           isAccepted={item.isWaitForAccept}
           key={item.chatRoom.id}
           onClick={onItemClick}
@@ -21,6 +18,21 @@ const ChatList = ({ items, onItemClick, className }) => {
       ))}
     </div>
   )
+};
+
+ChatList.propTypes = {
+  items: PropTypes.array.isRequired,
+  onItemClick: PropTypes.func,
+  ownUserId: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  className: PropTypes.string
+};
+
+ChatList.defaultProps = {
+  onItemClick: () => {},
+  className: ''
 };
 
 export default ChatList;

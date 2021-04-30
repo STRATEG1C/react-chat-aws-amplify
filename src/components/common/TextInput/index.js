@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './style.css';
+import './style.scss';
 
 const TextInput = ({ label, name, value, onChange, type, error, className }) => {
-  const onChangeHandler = (e) => onChange(name, e.target.value);
+  const onChangeHandler = (e) => onChange && onChange(name, e.target.value);
 
   return (
     <div className="input-group">

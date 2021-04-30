@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
-import './style.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearUser, selectCurrentUser } from '../../../store/Auth';
 import { Auth } from 'aws-amplify';
+import { clearUser, selectCurrentUser } from '../../../store/Auth';
+import './style.scss';
 
 const PageWrapper = ({ title, children }) => {
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
@@ -34,12 +34,7 @@ const PageWrapper = ({ title, children }) => {
 
 PageWrapper.propTypes = {
   title: PropTypes.string.isRequired,
-
-  // I've found it on StackOverflow :)
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]).isRequired
+  children: PropTypes.node.isRequired,
 }
 
 export default PageWrapper;

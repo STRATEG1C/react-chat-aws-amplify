@@ -12,8 +12,8 @@ import PageWrapper from '../../common/PageWrapper';
 import UsersList from '../../common/UsersList';
 import ChatList from '../../common/ChatList';
 import ChatRoom from '../ChatRoom';
-import './style.css';
 import BannedChatList from './BannedChatList';
+import './style.scss';
 
 const chatService = new ChatService(new ChatProvider());
 const userService = new UserService(new UserProvider());
@@ -39,16 +39,14 @@ const Feed = ({ match }) => {
   }, [currentUser.id, dispatch]);
 
   useEffect(() => {
-    const searchUsers = async () => {
-      if (searchContactString.length < 3) {
-        return;
-      }
-
-      const users = await userService.searchUser(searchContactString.toLowerCase());
-      setUserList(users.items);
+    if (searchContactString.length < 3) {
+      return;
     }
 
-    searchUsers();
+    userService.searchUser(searchContactString.toLowerCase())
+      .then(users => {
+        setUserList(users.items);
+      });
   }, [searchContactString]);
 
   const onUserClick = async (userId) => {
@@ -119,18 +117,19 @@ const Feed = ({ match }) => {
             <ChatList
               items={chatList}
               onItemClick={onClickChat}
+              ownUserId={currentUser.id}
               className="feed__chat-list"
             />
           )}
-          {bannedChats.length ? (
+          {!!bannedChats.length && (
             <BannedChatList
               items={bannedChats}
               onItemClick={onClickChat}
               className="feed__chat-list"
             />
-          ) : null}
+          )}
         </div>
-        {chatId ? <ChatRoom id={chatId} /> : null}
+        {chatId && <ChatRoom id={chatId} />}
       </div>
     </PageWrapper>
   );

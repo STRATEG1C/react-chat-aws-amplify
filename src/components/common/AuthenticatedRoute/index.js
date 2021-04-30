@@ -1,9 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { selectCurrentUser } from '../../../store/Auth';
 
-const AuthenticatedRoute = ({ currentUser, ...props }) => {
+const AuthenticatedRoute = ({ ...props }) => {
+  const currentUser = useSelector(state => selectCurrentUser(state.auth));
+
   if (currentUser) {
     return (
       <Route { ...props } />
@@ -13,8 +15,4 @@ const AuthenticatedRoute = ({ currentUser, ...props }) => {
   }
 };
 
-const mapStateToProps = (state) => ({
-  currentUser: selectCurrentUser(state.auth)
-});
-
-export default connect(mapStateToProps, null)(AuthenticatedRoute);
+export default AuthenticatedRoute;

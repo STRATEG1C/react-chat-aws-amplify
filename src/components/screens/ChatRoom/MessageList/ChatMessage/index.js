@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import './style.scss';
 
 const ChatMessage = ({ message, isOwn }) => {
   const { content, user } = message;
@@ -13,6 +15,15 @@ const ChatMessage = ({ message, isOwn }) => {
       </p>
     </div>
   );
+};
+
+ChatMessage.propTypes = {
+  message: PropTypes.object.isRequired,
+  isOwn: PropTypes.bool
+};
+
+ChatMessage.defaultProps = {
+  isOwn: false
 };
 
 export default ChatMessage;

@@ -16,7 +16,7 @@ const App = () => {
   const chatRooms = useSelector(state => selectAcceptedChats(state.chat));
 
   useEffect(() => {
-    if (!currentUser || !currentUser.id) {
+    if (!currentUser) {
       return;
     }
 
@@ -32,7 +32,7 @@ const App = () => {
     const subscription = chatService.subscribeToCreateNewConversation(currentUser.id, onNewChat);
 
     return () => subscription.unsubscribe();
-  });
+  }, [currentUser, dispatch]);
 
   useEffect(() => {
     if (!currentUser || !chatRooms.length) {
@@ -63,14 +63,14 @@ const App = () => {
     };
   }, [chatRooms, currentUser, dispatch]);
 
-  const onConversationUpdate = (updatedConversation) => {
-    dispatch(fetchChats(currentUser.id));
-  };
-
   useEffect(() => {
     if (!currentUser || !currentUser.id) {
       return;
     }
+
+    const onConversationUpdate = (updatedConversation) => {
+      dispatch(fetchChats(currentUser.id));
+    };
 
     const subscription = chatService.subscribeToUpdateOwnConversation(currentUser.id, onConversationUpdate);
 
