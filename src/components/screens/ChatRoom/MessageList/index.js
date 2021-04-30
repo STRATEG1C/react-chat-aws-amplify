@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ChatMessage from './ChatMessage';
+import './style.scss';
 
 const MessageList = ({ messages, ownUserId }) => {
   return (
@@ -13,6 +15,14 @@ const MessageList = ({ messages, ownUserId }) => {
       ))}
     </div>
   )
-}
+};
+
+MessageList.propTypes = {
+  messages: PropTypes.array.isRequired,
+  ownUserId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ])
+};
 
 export default MessageList;

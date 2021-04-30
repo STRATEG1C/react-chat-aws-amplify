@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   addMessage,
   selectChatRoom,
@@ -11,10 +12,10 @@ import { fetchChatRoom, fetchMessages } from '../../../store/Chat/thunks';
 import { selectCurrentUser } from '../../../store/Auth';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
-import AddMessageBlock from './AddMessageForm';
 import LazyLoad from '../../common/LazyLoad';
-import MessageList from './MessageList';
 import AcceptChatBlock from './AcceptChatBlock';
+import AddMessageBlock from './AddMessageBlock';
+import MessageList from './MessageList';
 import './style.scss';
 
 const chatService = new ChatService(new ChatProvider());
@@ -30,52 +31,59 @@ const ChatRoom = ({ id }) => {
   const nextChatMessages = useSelector(state => selectNextMessages(state.chat));
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
 
-  const updateReadTime = async () => {
+  const updateReadTime = useCallback(async () => {
     await chatService.updateConversation(userConversation.id, {
       lastSeenTime: new Date().toISOString()
     });
-  };
+  }, [userConversation]);
 
   useEffect(() => {
     if (!userConversation) {
       return;
     }
     updateReadTime();
-  }, [userConversation]);
+  }, [userConversation, updateReadTime]);
 
   useEffect(() => {
-    const fetchChatData = async () => {
-      const userConversation = await chatService.getUserConversation(currentUser.id, id);
-      if (!userConversation) {
-        history.push('/');
-      }
-
-      setUserConversation(userConversation);
-
-      dispatch(fetchChatRoom(id));
-      dispatch(fetchMessages({
-        chatId: id,
-        limit: MESSAGES_PER_PAGE
-      }));
+    if (!currentUser || !id) {
+      return;
     }
 
-    fetchChatData();
-  }, [id, currentUser.id, dispatch, history]);
+    chatService.getUserConversation(currentUser.id, id)
+      .then(userConversation => {
+        if (!userConversation) {
+          return history.push('/');
+        }
+        setUserConversation(userConversation);
+      });
+  }, [id, currentUser, dispatch, history]);
+
+  useEffect(() => {
+    if (!userConversation) {
+      return;
+    }
+
+    dispatch(fetchChatRoom(id));
+    dispatch(fetchMessages({
+      chatId: id,
+      limit: MESSAGES_PER_PAGE
+    }));
+  }, [userConversation, dispatch, id]);
 
   useEffect(() => {
     if (!chatRoomData) {
       return;
     }
 
-    const onReceiveNewMessage = async (message) => {
+    const onReceiveNewMessage = (message) => {
       dispatch(addMessage(message));
-      await updateReadTime();
+      updateReadTime();
     };
 
     const newMessageSubscription = chatService.subscribeToChatRoom(id, onReceiveNewMessage);
 
     return () => newMessageSubscription.unsubscribe();
-  }, [chatRoomData, dispatch, id]);
+  }, [chatRoomData, dispatch, id, updateReadTime]);
 
   const onAcceptConversation = async (state) => {
     const updatedConversation = await chatService.updateConversation(userConversation.id, {
@@ -125,14 +133,23 @@ const ChatRoom = ({ id }) => {
     )
   }
 
+  const isChatWaitForAccept = userConversation.isWaitForAccept;
+  const isChatBanned = !userConversation.isWaitForAccept && !userConversation.isAccepted;
+
   return (
     <div className="chat-room-wrapper">
       <Link to="/" className="back">{`<- Close`}</Link>
-      {userConversation.isWaitForAccept ? <AcceptChatBlock onAccept={onAcceptConversation} /> : <AddMessageBlock onAdd={onAddMessage} />}
-      {!userConversation.isAccepted ? <AcceptChatBlock onAccept={onUnbanConversation} /> : null}
+      {isChatWaitForAccept ? (
+        <AcceptChatBlock onAccept={onAcceptConversation} />
+      ) : (
+        <AddMessageBlock onAdd={onAddMessage} />
+      )}
+      {isChatBanned && (
+        <AcceptChatBlock onAccept={onUnbanConversation} />
+      )}
       <LazyLoad
         onLoadMore={onLoadMoreMessages}
-        className="message-scrollable-list "
+        className="message-scrollable-list"
       >
         <MessageList
           messages={chatRoomMessages}
@@ -142,6 +159,13 @@ const ChatRoom = ({ id }) => {
       <hr/>
     </div>
   );
+};
+
+ChatRoom.propTypes = {
+  id: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]).isRequired
 };
 
 export default ChatRoom;

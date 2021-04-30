@@ -1,14 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './style.scss';
 
 const ChatListItem = ({ room, ownUserId, isAccepted, lastSeenTime, onClick }) => {
-  const onClickHandler = () => {
-    onClick(room.id);
-  }
-
   let partnerUser = room.subscriberID === ownUserId
     ? room.initiator
     : room.subscriber;
+
+  const onClickHandler = () => onClick(room.id);
 
   const showUnreadMessages = () => {
     if (!room.lastMessage || !lastSeenTime) {
@@ -54,6 +53,25 @@ const ChatListItem = ({ room, ownUserId, isAccepted, lastSeenTime, onClick }) =>
       </div>
     </div>
   )
+}
+
+ChatListItem.propTypes = {
+  room: PropTypes.object.isRequired,
+  ownUserId: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  isAccepted: PropTypes.bool,
+  lastSeenTime: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  onClick: PropTypes.func
+}
+
+ChatListItem.defaultProps = {
+  isAccepted: false,
+  onClick: () => {}
 }
 
 export default ChatListItem;

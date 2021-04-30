@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const AddMessageBlock = ({ onAdd }) => {
   const [message, setMessage] = useState('');
 
   const onPressKey = (e) => {
-    if (e.key === 'Enter') {
-      onAdd(message);
-      setMessage('');
+    if (e.key !== 'Enter') {
+      return;
     }
+
+    if (!onAdd) {
+      return;
+    }
+
+    onAdd(message);
+    setMessage('');
   }
 
   return (
@@ -23,5 +30,13 @@ const AddMessageBlock = ({ onAdd }) => {
     </div>
   )
 }
+
+AddMessageBlock.propTypes = {
+  onAdd: PropTypes.func
+};
+
+AddMessageBlock.defaultProps = {
+  onAdd: () => {}
+};
 
 export default AddMessageBlock;

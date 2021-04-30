@@ -4,9 +4,6 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.8.3",
     "aws-amplify": "^3.3.24",
     "axios": "^0.21.1",
     "history": "4.9.0",
@@ -22,6 +19,11 @@
     "redux": "^4.0.5",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^12.8.3"
   },
   "scripts": {
     "start": "react-scripts start",

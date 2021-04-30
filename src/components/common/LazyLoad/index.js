@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 
 import { debounce } from '../../../helpers/debounce';
 
@@ -21,7 +22,7 @@ const LazyLoad = ({
     const heightOfNotScrolledContent = heightOfAllContent - heightOfScrolledContent;
 
     if (heightOfNotScrolledContent < scrollBuffer) {
-      if (!isDisabledLoad) {
+      if (!isDisabledLoad && onLoadMore) {
         onLoadMore();
       }
     }
@@ -36,6 +37,20 @@ const LazyLoad = ({
       { children }
     </div>
   )
+}
+
+LazyLoad.propTypes = {
+  onLoadMore: PropTypes.func.isRequired,
+  scrollBuffer: PropTypes.number,
+  className: PropTypes.string,
+  isDisabledLoad: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+}
+
+LazyLoad.defaultProps = {
+  scrollBuffer: 100,
+  className: '',
+  isDisabledLoad: false,
 }
 
 export default LazyLoad;

@@ -7,7 +7,7 @@ import {
   updateChatRoom,
   updateUserConversation
 } from '../graphql/mutations';
-import { listUserConversations } from '../components/common/ChatList/queries';
+import { listUserConversations } from '../customQueries/queries';
 import {
   onCreateUserConversationByUserId,
   onNewMessageInChat,
