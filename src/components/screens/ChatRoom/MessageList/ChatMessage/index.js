@@ -6,7 +6,7 @@ const ChatMessage = ({ message, isOwn }) => {
   const { content, user } = message;
 
   return (
-    <div className={`chat-message ${isOwn ? 'chat-message-own' : ''}`}>
+    <div role="chat-message" className={`chat-message ${isOwn ? 'chat-message-own' : ''}`}>
       <p className="chat-message__user">
         { user.username }
       </p>

@@ -14,6 +14,7 @@ const TextInput = ({ label, name, value, onChange, type, error, className }) => 
         onChange={onChangeHandler}
         type={type}
         className={`input-group__input ${className}`}
+        data-testid="text-input"
       />
       {error && <span className="error">{error}</span>}
     </div>

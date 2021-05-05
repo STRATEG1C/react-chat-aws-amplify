@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Button component should be rendered 1`] = `
+<DocumentFragment>
+  <button
+    class="button bar"
+  >
+    foo
+  </button>
+</DocumentFragment>
+`;

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test PageWrapper component Should be rendered for authorized user 1`] = `
+<DocumentFragment>
+  <div
+    class="page-wrapper"
+  >
+    <div
+      class="page-wrapper__header"
+    >
+      <h1>
+        foo
+      </h1>
+      <button
+        data-testid="logout-btn"
+      >
+        Log out
+      </button>
+    </div>
+    Bar
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Test PageWrapper component Should be rendered for unauthorized user 1`] = `
+<DocumentFragment>
+  <div
+    class="page-wrapper"
+  >
+    <div
+      class="page-wrapper__header"
+    >
+      <h1>
+        foo
+      </h1>
+      <button
+        data-testid="login-btn"
+      >
+        Login
+      </button>
+    </div>
+    Bar
+  </div>
+</DocumentFragment>
+`;

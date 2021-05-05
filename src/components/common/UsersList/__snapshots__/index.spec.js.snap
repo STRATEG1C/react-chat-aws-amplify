@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test UserList component should be rendered 1`] = `
+<DocumentFragment>
+  <div
+    class="users-list chat-list"
+  >
+    <h2
+      class="users-list__heading"
+    >
+      Users list
+    </h2>
+    <div
+      class="users-list__list"
+    >
+      <div
+        class="user-card chat-card"
+        role="user-card"
+      >
+        <div
+          class="chat-card__avatar"
+        />
+        <div
+          class="chat-card__info"
+        >
+          <div
+            class="chat-card__title"
+          >
+            Name 2
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
