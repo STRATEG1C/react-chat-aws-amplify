@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test AcceptChatBlock component should be rendered 1`] = `
+<DocumentFragment>
+  <div
+    class="accept-chat"
+  >
+    <p>
+      Do you accept this conversation?
+    </p>
+    <button
+      data-testid="accept-btn"
+    >
+      Yes, I do
+    </button>
+    ---------
+    <button
+      data-testid="decline-btn"
+    >
+      No, I don't
+    </button>
+  </div>
+</DocumentFragment>
+`;

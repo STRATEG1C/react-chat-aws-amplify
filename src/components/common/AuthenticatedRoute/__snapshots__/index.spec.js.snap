@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test AuthenticatedRoute component Should be rendered for authorized user 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="pageComponent"
+  >
+    Foo
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Test AuthenticatedRoute component Should not be rendered for unauthorized user 1`] = `<DocumentFragment />`;

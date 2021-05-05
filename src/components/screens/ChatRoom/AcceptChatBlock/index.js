@@ -7,9 +7,9 @@ const AcceptChatBlock = ({ onAccept }) => {
   return (
     <div className="accept-chat">
       <p>Do you accept this conversation?</p>
-      <button onClick={onAcceptHandler.bind(this, true)}>Yes, I do</button>
+      <button data-testid="accept-btn" onClick={onAcceptHandler.bind(this, true)}>Yes, I do</button>
       ---------
-      <button onClick={onAcceptHandler.bind(this, false)}>No, I don't</button>
+      <button data-testid="decline-btn" onClick={onAcceptHandler.bind(this, false)}>No, I don't</button>
     </div>
   )
 }

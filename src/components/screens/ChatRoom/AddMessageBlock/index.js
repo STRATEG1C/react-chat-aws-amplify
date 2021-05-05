@@ -9,10 +9,6 @@ const AddMessageBlock = ({ onAdd }) => {
       return;
     }
 
-    if (!onAdd) {
-      return;
-    }
-
     onAdd(message);
     setMessage('');
   }
@@ -26,6 +22,7 @@ const AddMessageBlock = ({ onAdd }) => {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyPress={onPressKey}
+        role="text-area"
       />
     </div>
   )
