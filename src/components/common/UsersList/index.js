@@ -15,7 +15,7 @@ const UsersList = ({ items, onItemClick, currentUserId }) => {
       <h2 className="users-list__heading">Users list</h2>
       <div className="users-list__list">
         {userList.map(item => (
-          <div className="user-card chat-card" key={item.id} onClick={() => onClickHandler(item)}>
+          <div data-testid="user-card" className="user-card chat-card" key={item.id} onClick={() => onClickHandler(item)}>
             <div className="chat-card__avatar" />
             <div className="chat-card__info">
               <div className="chat-card__title">

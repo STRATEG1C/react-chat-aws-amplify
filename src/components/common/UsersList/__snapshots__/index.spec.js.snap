@@ -15,7 +15,7 @@ exports[`Test UserList component should be rendered 1`] = `
     >
       <div
         class="user-card chat-card"
-        role="user-card"
+        data-testid="user-card"
       >
         <div
           class="chat-card__avatar"

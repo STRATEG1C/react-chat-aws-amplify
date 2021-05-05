@@ -7,7 +7,7 @@ exports[`Test MessageList component should be rendered 1`] = `
   >
     <div
       class="chat-message "
-      role="chat-message"
+      data-testid="chat-message"
     >
       <p
         class="chat-message__user"
@@ -22,7 +22,7 @@ exports[`Test MessageList component should be rendered 1`] = `
     </div>
     <div
       class="chat-message "
-      role="chat-message"
+      data-testid="chat-message"
     >
       <p
         class="chat-message__user"
@@ -37,7 +37,7 @@ exports[`Test MessageList component should be rendered 1`] = `
     </div>
     <div
       class="chat-message "
-      role="chat-message"
+      data-testid="chat-message"
     >
       <p
         class="chat-message__user"

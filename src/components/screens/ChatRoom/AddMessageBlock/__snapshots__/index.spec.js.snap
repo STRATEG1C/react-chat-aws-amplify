@@ -10,7 +10,7 @@ exports[`Test AddMessageBlock component should be rendered 1`] = `
     </p>
     <textarea
       cols="60"
-      role="text-area"
+      data-testid="textarea"
       rows="3"
     />
   </div>
