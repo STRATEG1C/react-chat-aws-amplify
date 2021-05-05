@@ -22,7 +22,7 @@ const AddMessageBlock = ({ onAdd }) => {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyPress={onPressKey}
-        role="text-area"
+        data-testid="textarea"
       />
     </div>
   )

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const AcceptChatBlock = ({ onAccept }) => {
-  const onAcceptHandler = (state) => onAccept(state);
+  const onAcceptHandler = (state) => onAccept && onAccept(state);
 
   return (
     <div className="accept-chat">
@@ -15,11 +15,7 @@ const AcceptChatBlock = ({ onAccept }) => {
 }
 
 AcceptChatBlock.proptTypes = {
-  onAccept: PropTypes.func
-};
-
-AcceptChatBlock.defaultProps = {
-  onAccept: () => {}
+  onAccept: PropTypes.func.isRequired
 };
 
 export default AcceptChatBlock;

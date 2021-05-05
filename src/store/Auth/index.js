@@ -1,43 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { login, register, signOut } from './thunks';
+import {
+  login,
+  register,
+  signOut
+} from './thunks';
 
 const initialState = {
   user: null,
-  isLoggedIn: false,
   isLoading: false,
-  isError: false,
-  isRegistered: false
+  isError: false
 };
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
-    },
-    clearUser: state => {
-      state.user = null;
-    },
-    toggleLoading: state => {
-      state.isLoading = !state.isLoading;
-    }
-  },
   extraReducers: {
     [login.pending]: (state, action) => {
       state.isLoading = true;
-      state.isLoggedIn = false;
       state.isError = false;
     },
     [login.fulfilled]: (state, action) => {
-      state.user = action.payload;
-      state.isLoggedIn = true;
+      state.user = { ...action.payload };
       state.isLoading = false;
     },
     [login.rejected]: (state, action) => {
       state.isError = true;
       state.isLoading = false;
-      state.isLoggedIn = false;
     },
 
     [register.pending]: (state, action) => {
@@ -57,15 +45,17 @@ export const authSlice = createSlice({
     },
 
     [signOut.pending]: (state, action) => {
-      state.isLoading = true;
-      state.isLoggedIn = false;
-      state.isError = false;
     },
+    [signOut.fulfilled]: (state, action) => {
+      state.user = null;
+    },
+    [signOut.rejected]: (state, action) => {
+      state.user = null;
+    }
   }
 });
 
-export const { setUser, clearUser } = authSlice.actions;
-
 export const selectCurrentUser = state => state.user;
+export const selectAuthError = state => state.isError;
 
 export default authSlice.reducer;

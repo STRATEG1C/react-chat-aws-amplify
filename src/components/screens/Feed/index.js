@@ -3,96 +3,93 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ChatService from '../../../services/ChatService';
 import ChatProvider from '../../../providers/ChatProvider';
-import UserService from '../../../services/UserService';
-import UserProvider from '../../../providers/UserProvider';
 import { selectCurrentUser } from '../../../store/Auth';
 import { selectAcceptedChats, selectBannedChats } from '../../../store/Chat';
 import { fetchBannedChats, fetchChats } from '../../../store/Chat/thunks';
+import { FEED } from '../../../constants/pathNames';
 import PageWrapper from '../../common/PageWrapper';
-import UsersList from '../../common/UsersList';
 import ChatList from '../../common/ChatList';
 import ChatRoom from '../ChatRoom';
 import BannedChatList from './BannedChatList';
+import SearchUser from './SearchUser';
 import './style.scss';
 
 const chatService = new ChatService(new ChatProvider());
-const userService = new UserService(new UserProvider());
 
 const Feed = ({ match }) => {
   const [searchContactString, setSearchContactString] = useState('');
-  const [userList, setUserList] = useState([]);
+  const [isSearchContainsValue, setIsSearchContainsValue] = useState('');
+
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const currentUser = useSelector(state => selectCurrentUser(state.auth));
-  const history = useHistory();
-
-  const onClickChat = (chatId) => {
-    history.push(`/${chatId}`);
-  }
-
   const chatList = useSelector(state => selectAcceptedChats(state.chat));
   const bannedChats = useSelector(state => selectBannedChats(state.chat));
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchChats(currentUser.id));
     dispatch(fetchBannedChats(currentUser.id));
   }, [currentUser.id, dispatch]);
 
-  useEffect(() => {
-    if (searchContactString.length < 3) {
-      return;
+  const onChangeSearch = (value) => {
+    setIsSearchContainsValue(value.trim());
+  }
+
+  const onClickChat = (chatId) => {
+    history.push(`${FEED}${chatId}`);
+  }
+
+  const makeSearchRoomCondition = (userId, currentUserId) => {
+    return {
+      or: [
+        {
+          and: [
+            { initiatorID: { eq: userId } },
+            { subscriberID: { eq: currentUserId } },
+          ],
+        },
+        {
+          and: [
+            { initiatorID: { eq: currentUserId } },
+            { subscriberID: { eq: userId } },
+          ],
+        },
+      ],
+    };
+  }
+
+  const getChatRoomOrCreateNew = async (userId, currentUserId) => {
+    let chatRoom;
+    const filter = makeSearchRoomCondition(userId, currentUserId);
+    const rooms = await chatService.getChatRoomList(filter, 1);
+
+    if (rooms.length) {
+      chatRoom = rooms[0];
+    } else {
+      chatRoom = await chatService.createChatRoom(currentUserId, userId);
+      await chatService.createUserConversation(userId, chatRoom.id, false);
+      await chatService.createUserConversation(currentUserId, chatRoom.id, true);
     }
 
-    userService.searchUser(searchContactString.toLowerCase())
-      .then(users => {
-        setUserList(users.items);
-      });
-  }, [searchContactString]);
+    return chatRoom;
+  }
 
-  const onUserClick = async (userId) => {
+  const onUserClick = async (user) => {
     try {
-      let chatRoom;
+      const chatRoom = await getChatRoomOrCreateNew(user.id, currentUser.id);
 
-      const filter = {
-        or: [
-          {
-            and: [
-              { initiatorID: { eq: userId } },
-              { subscriberID: { eq: currentUser.id } }
-            ]
-          },
-          {
-            and: [
-              { initiatorID: { eq: currentUser.id } },
-              { subscriberID: { eq: userId } }
-            ]
-          }
-        ]
-      }
-
-      const rooms = await chatService.getChatRoomList(filter, 1);
-
-      if (rooms.length) {
-        chatRoom = rooms[0];
-      } else {
-        chatRoom = await chatService.createChatRoom(currentUser.id, userId);
-        await chatService.createUserConversation(userId, chatRoom.id, false);
-        await chatService.createUserConversation(currentUser.id, chatRoom.id, true);
-      }
+      console.log(chatRoom);
 
       if (searchContactString) {
         setSearchContactString('');
       }
 
-      history.push(`/${chatRoom.id}`);
+      history.push(`${FEED}${chatRoom.id}`);
     } catch(err) {
       console.log('Error while creating a new chat room', err);
     }
   };
-
-  const onChangeSearchContact = (e) => {
-    setSearchContactString(e.target.value);
-  }
 
   const chatId = match?.params?.chatId;
 
@@ -100,20 +97,12 @@ const Feed = ({ match }) => {
     <PageWrapper title="Feed">
       <div className="flex">
         <div className="contact-list">
-          <input
-            type="text"
-            placeholder="Search chat or user"
+          <SearchUser
             value={searchContactString}
-            onChange={onChangeSearchContact}
+            onChange={onChangeSearch}
+            onSelectUser={onUserClick}
           />
-          {searchContactString ? (
-            <UsersList
-              items={userList}
-              onItemClick={onUserClick}
-              currentUserId={currentUser.id}
-              className="feed__chat-list"
-            />
-          ) : (
+          {!isSearchContainsValue && (
             <ChatList
               items={chatList}
               onItemClick={onClickChat}

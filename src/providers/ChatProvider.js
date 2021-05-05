@@ -49,6 +49,20 @@ class ChatProvider {
     return res.data.updateUserConversation;
   }
 
+  async acceptConversation(conversationId) {
+    return this.updateConversation(conversationId, {
+      isWaitForAccept: false,
+      isAccepted: true
+    });
+  }
+
+  async banConversation(conversationId) {
+    return this.updateConversation(conversationId, {
+      isWaitForAccept: false,
+      isAccepted: false
+    });
+  }
+
   async getChatRoom(id) {
     const res = await API.graphql(graphqlOperation(getChatRoom, { id }));
     return res.data.getChatRoom;

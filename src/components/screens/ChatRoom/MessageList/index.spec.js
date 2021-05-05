@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import MessageList from './index';
 
 const listFixture = [
@@ -33,8 +33,8 @@ const listFixture = [
 
 describe('Test MessageList component', () => {
     it('should be rendered', () => {
-        const { asFragment, queryAllByRole } = render(<MessageList messages={listFixture} />);
+        const { asFragment, queryAllByTestId } = render(<MessageList messages={listFixture} />);
         expect(asFragment()).toMatchSnapshot();
-        expect(queryAllByRole('chat-message').length).toBe(listFixture.length);
+        expect(queryAllByTestId('chat-message').length).toBe(listFixture.length);
     });
 });

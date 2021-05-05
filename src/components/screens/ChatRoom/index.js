@@ -17,10 +17,11 @@ import AcceptChatBlock from './AcceptChatBlock';
 import AddMessageBlock from './AddMessageBlock';
 import MessageList from './MessageList';
 import './style.scss';
+import { FEED } from '../../../constants/pathNames';
 
 const chatService = new ChatService(new ChatProvider());
 
-const MESSAGES_PER_PAGE = 20;
+const MESSAGES_PER_PAGE = 30;
 
 const ChatRoom = ({ id }) => {
   const [userConversation, setUserConversation] = useState(null);
@@ -52,61 +53,38 @@ const ChatRoom = ({ id }) => {
     chatService.getUserConversation(currentUser.id, id)
       .then(userConversation => {
         if (!userConversation) {
-          return history.push('/');
+          return history.push(FEED);
         }
+
         setUserConversation(userConversation);
+        dispatch(fetchChatRoom(id));
+        dispatch(fetchMessages({
+          chatId: id,
+          limit: MESSAGES_PER_PAGE
+        }));
       });
   }, [id, currentUser, dispatch, history]);
-
-  useEffect(() => {
-    if (!userConversation) {
-      return;
-    }
-
-    dispatch(fetchChatRoom(id));
-    dispatch(fetchMessages({
-      chatId: id,
-      limit: MESSAGES_PER_PAGE
-    }));
-  }, [userConversation, dispatch, id]);
 
   useEffect(() => {
     if (!chatRoomData) {
       return;
     }
 
-    const onReceiveNewMessage = (message) => {
+    const newMessageSubscription = chatService.subscribeToChatRoom(chatRoomData.id, (message) => {
       dispatch(addMessage(message));
       updateReadTime();
-    };
-
-    const newMessageSubscription = chatService.subscribeToChatRoom(id, onReceiveNewMessage);
+    });
 
     return () => newMessageSubscription.unsubscribe();
   }, [chatRoomData, dispatch, id, updateReadTime]);
 
   const onAcceptConversation = async (state) => {
-    const updatedConversation = await chatService.updateConversation(userConversation.id, {
-      isWaitForAccept: false,
-      isAccepted: state
-    });
-
     if (!state) {
+      await chatService.acceptConversation(userConversation.id);
       return history.push('/');
     }
 
-    setUserConversation(updatedConversation);
-  }
-
-  const onUnbanConversation = async (state) => {
-    const updatedConversation = await chatService.updateConversation(userConversation.id, {
-      isAccepted: state
-    });
-
-    if (!state) {
-      return history.push('/');
-    }
-
+    const updatedConversation = await chatService.acceptConversation(userConversation.id);
     setUserConversation(updatedConversation);
   }
 
@@ -145,7 +123,7 @@ const ChatRoom = ({ id }) => {
         <AddMessageBlock onAdd={onAddMessage} />
       )}
       {isChatBanned && (
-        <AcceptChatBlock onAccept={onUnbanConversation} />
+        <AcceptChatBlock onAccept={onAcceptConversation} />
       )}
       <LazyLoad
         onLoadMore={onLoadMoreMessages}

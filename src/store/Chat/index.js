@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchBannedChats, fetchChatRoom, fetchChats, fetchMessages } from './thunks';
+import {
+  fetchBannedChats,
+  fetchChatRoom,
+  fetchChats,
+  fetchMessages
+} from './thunks';
 
 const initialState = {
   chatRooms: [],
