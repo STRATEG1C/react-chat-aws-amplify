@@ -4,12 +4,10 @@ import PropTypes from 'prop-types';
 const UsersList = ({ items, onItemClick, currentUserId }) => {
   const userList = items.filter(user => user.id !== currentUserId);
 
-  const onClickHandler = (item) => {
-    if (item.id === currentUserId) {
-      return;
+  const onClickHandler = (userId) => {
+    if (userId !== currentUserId) {
+      onItemClick && onItemClick(userId);
     }
-
-    onItemClick(item.id);
   }
 
   return (
@@ -17,7 +15,7 @@ const UsersList = ({ items, onItemClick, currentUserId }) => {
       <h2 className="users-list__heading">Users list</h2>
       <div className="users-list__list">
         {userList.map(item => (
-          <div className="user-card chat-card" key={item.id} onClick={onClickHandler}>
+          <div className="user-card chat-card" key={item.id} onClick={() => onClickHandler(item)}>
             <div className="chat-card__avatar" />
             <div className="chat-card__info">
               <div className="chat-card__title">
@@ -33,15 +31,11 @@ const UsersList = ({ items, onItemClick, currentUserId }) => {
 
 UsersList.propTypes = {
   items: PropTypes.array.isRequired,
-  onItemClick: PropTypes.func,
+  onItemClick: PropTypes.func.isRequired,
   currentUserId: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ])
 };
-
-UsersList.defaultProps = {
-  onItemClick: () => {}
-}
 
 export default UsersList;

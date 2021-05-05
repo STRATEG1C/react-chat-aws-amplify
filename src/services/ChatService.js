@@ -37,6 +37,14 @@ class ChatService {
     return this._provider.updateConversation(id, data);
   }
 
+  async acceptConversation(conversationId) {
+    return this._provider.acceptConversation(conversationId);
+  }
+
+  async banConversation(conversationId) {
+    return this._provider.banConversation(conversationId);
+  }
+
   async getMessagesByChatId(chatId, limit, page) {
     return this._provider.getMessagesByChatId(chatId, limit, page);
   }
