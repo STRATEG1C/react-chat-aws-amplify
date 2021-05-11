@@ -4,7 +4,7 @@ import { fetchUsers } from './thunks';
 const initialState = {
   items: [],
   isLoading: false,
-  isError: true
+  isError: false
 };
 
 export const userSlice = createSlice({

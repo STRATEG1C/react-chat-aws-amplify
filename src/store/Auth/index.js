@@ -44,8 +44,6 @@ export const authSlice = createSlice({
       state.isRegistered = false;
     },
 
-    [signOut.pending]: (state, action) => {
-    },
     [signOut.fulfilled]: (state, action) => {
       state.user = null;
     },

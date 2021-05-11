@@ -12,7 +12,7 @@ const initialState = {
   chatRoom: null,
   messages: [],
   isLoading: false,
-  isError: true,
+  isError: false,
   nextMessages: ''
 };
 
